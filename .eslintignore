@@ -1,2 +1,3 @@
 src/types.ts
+src/methods/on.ts
 src/utils/handler.ts
