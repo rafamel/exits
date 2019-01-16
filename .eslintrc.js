@@ -12,7 +12,7 @@ module.exports = {
     impliedStrict: true
   },
   plugins: ['prettier', 'jest', 'import', 'babel'],
-  globals: {},
+  globals: { Partial: true },
   rules: {
     'no-warning-comments': [
       1,
