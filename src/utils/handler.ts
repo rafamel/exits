@@ -1,17 +1,26 @@
 import logger from '~/logger';
-import { TSignal } from '~/types';
+import { TSignal, IStore } from '~/types';
 import { unattach } from '~/methods/attach';
-import { store } from '~/store';
 import setState from '~/utils/set-state';
 
 // TODO add `stop()` param in order to stop the add() flow within a task add()'ed.
-export default function handler(type: 'signal', arg: TSignal): Promise<void>;
 export default function handler(
+  store: IStore,
+  type: 'signal',
+  arg: TSignal
+): Promise<void>;
+export default function handler(
+  store: IStore,
   type: 'exception' | 'rejection',
   arg: Error
 ): Promise<void>;
-export default function handler(type: 'exit', arg: number): Promise<void>;
+export default function handler(
+  store: IStore,
+  type: 'exit',
+  arg: number
+): Promise<void>;
 export default async function handler(
+  store: IStore,
   type: 'signal' | 'exception' | 'rejection' | 'exit',
   arg: any
 ): Promise<void> {
@@ -22,7 +31,7 @@ export default async function handler(
     logger.info('Handler triggered: ' + type);
 
     // Update state
-    setState({ triggered: { type, arg } });
+    setState(store, { triggered: { type, arg } });
 
     while (stack.length) {
       const element = stack.shift();
@@ -36,9 +45,9 @@ export default async function handler(
     }
 
     // Unattach self
-    unattach();
+    unattach(store);
     // Update state
-    setState({ done: true });
+    setState(store, { done: true });
   } catch (e) {
     logger.error(e);
   }

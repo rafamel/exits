@@ -1,6 +1,7 @@
-import { store } from '~/store';
+import { IStore } from '~/types';
 
 export default function generate<T, A extends any[]>(
+  store: IStore,
   fn: (...args: A) => IterableIterator<T>
 ): (...args: A) => Promise<T> {
   return async (...args: A): Promise<T> => {

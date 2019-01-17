@@ -1,8 +1,7 @@
 import logger from '~/logger';
-import { store } from '~/store';
-import { IState } from '~/types';
+import { IState, IStore } from '~/types';
 
-export default function setState(update: Partial<IState>) {
+export default function setState(store: IStore, update: Partial<IState>) {
   Object.entries(update).forEach(([key, value]) => {
     // @ts-ignore
     store.state[key] = value;

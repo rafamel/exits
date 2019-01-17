@@ -8,6 +8,7 @@ export const store: IStore = {
     done: false,
     attached: { signal: false, exception: false, rejection: false, exit: false }
   },
+  handlers: { signal: null, exception: null, rejection: null, exit: null },
   subscribers: {
     triggered: [],
     done: [],

@@ -1,7 +1,7 @@
-import { IAttach, TSignal } from '~/types';
-import { store } from '~/store';
+import { IAttach, TSignal, IStore } from '~/types';
 
 export default function add(
+  store: IStore,
   cb: (
     type: 'signal' | 'exception' | 'rejection' | 'exit',
     arg: TSignal | Error | number
