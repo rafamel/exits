@@ -13,7 +13,7 @@ export default function on(
 export default function on(
   event: 'triggered' | 'done' | 'attached',
   cb: (val: any) => void
-) {
+): void {
   if (store.subscribers.hasOwnProperty(String(event))) {
     // @ts-ignore
     store.subscribers[event].push(cb);

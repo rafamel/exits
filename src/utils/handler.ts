@@ -4,6 +4,7 @@ import { unattach } from '~/methods/attach';
 import { store } from '~/store';
 import setState from '~/utils/set-state';
 
+// TODO add `stop()` param in order to stop the add() flow within a task add()'ed.
 export default function handler(type: 'signal', arg: TSignal): Promise<void>;
 export default function handler(
   type: 'exception' | 'rejection',
@@ -17,6 +18,8 @@ export default async function handler(
   try {
     const { state, stack } = store;
     if (state.triggered) return;
+
+    logger.info('Handler triggered: ' + type);
 
     // Update state
     setState({ triggered: { type, arg } });
@@ -39,5 +42,5 @@ export default async function handler(
   } catch (e) {
     logger.error(e);
   }
-  store.options.resolver(type, arg);
+  await store.options.resolver(type, arg);
 }

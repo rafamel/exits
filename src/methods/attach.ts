@@ -4,7 +4,7 @@ import setState from '~/utils/set-state';
 import { store } from '~/store';
 import handler from '~/utils/handler';
 
-export const SIGNALS: TSignal[] = ['SIGINT', 'SIGHUP', 'SIGQUIT', 'SIGTERM'];
+export const signals: TSignal[] = ['SIGINT', 'SIGHUP', 'SIGQUIT', 'SIGTERM'];
 
 const handlers = {
   signal(sig: TSignal): Promise<void> {
@@ -39,9 +39,9 @@ export function attach({
 
   const update: Partial<IAttach> = {};
   if (signal && !state.attached.signal) {
-    logger.debug('Attach to signal: ' + SIGNALS.join(', '));
+    logger.debug('Attach to signal: ' + signals.join(', '));
     update.signal = true;
-    SIGNALS.forEach((sig: any) => process.on(sig, handlers.signal));
+    signals.forEach((sig: any) => process.on(sig, handlers.signal));
   }
   if (exception && !state.attached.exception) {
     logger.debug('Attach to exception');
@@ -74,9 +74,9 @@ export function unattach({
 
   const update: Partial<IAttach> = {};
   if (signal && state.attached.signal) {
-    logger.debug('Unattach from signal: ' + SIGNALS.join(', '));
+    logger.debug('Unattach from signal: ' + signals.join(', '));
     update.signal = false;
-    SIGNALS.forEach((sig: any) => process.removeListener(sig, handlers.signal));
+    signals.forEach((sig: any) => process.removeListener(sig, handlers.signal));
   }
   if (exception && state.attached.exception) {
     logger.debug('Unattach from exception');
