@@ -2,7 +2,7 @@
   "name": "exits",
   "version": "0.0.0",
   "author": "Rafa Mel",
-  "description": "Run arbitrary functions asynchronously on process termination, exception, and exit",
+  "description": "Run arbitrary functions asynchronously on process termination, exception, and exit, programatically or via CLI",
   "keywords": [
     "exit",
     "cleanup",
@@ -85,7 +85,6 @@
     "tslint": "^5.12.0",
     "tslint-config-prettier": "^1.17.0",
     "typedoc": "^0.13.0",
-    "typedoc-plugin-external-module-name": "^1.1.3",
     "typescript": "^3.2.1"
   },
   "dependencies": {

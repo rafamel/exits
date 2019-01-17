@@ -76,7 +76,7 @@ module.exports = scripts({
   ),
   docs: series(
     exit0(`shx rm -r ${DOCS_DIR}`),
-    ts(`typedoc --out ${DOCS_DIR} ./src`)
+    ts(`typedoc --hideGenerator --out ${DOCS_DIR} ./src`)
   ),
   // Private
   private: {

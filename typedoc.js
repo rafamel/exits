@@ -1,9 +1,10 @@
 module.exports = {
-  mode: 'modules',
+  mode: 'file',
   includeDeclarations: true,
   excludePrivate: true,
   excludeProtected: true,
   excludeExternals: true,
   moduleResolution: 'node',
-  module: 'system'
+  module: 'system',
+  exclude: ['**/utils/**/*.ts', '**/store.ts', '**/logger.ts']
 };
