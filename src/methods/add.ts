@@ -1,8 +1,11 @@
-import { IAttach } from '~/types';
+import { IAttach, TSignal } from '~/types';
 import { store } from '~/store';
 
-export function add(
-  cb: () => Promise<void> | void,
+export default function add(
+  cb: (
+    type: 'signal' | 'exception' | 'rejection' | 'exit',
+    arg: TSignal | Error | number
+  ) => Promise<void> | void,
   priority?: number | null,
   {
     signal = true,
@@ -10,7 +13,7 @@ export function add(
     rejection = true,
     exit = true
   }: Partial<IAttach> = {}
-): void {
+) {
   if (!priority) priority = 0;
   const { stack } = store;
 
@@ -26,13 +29,14 @@ export function add(
     }
   }
   stack.push(el);
-}
 
-export function remove(cb: () => Promise<void> | void): void {
-  const { stack } = store;
-  for (let i = 0; i < stack.length; i++) {
-    if (stack[i].cb === cb) {
-      store.stack = stack.slice(0, i).concat(stack.slice(i + 1));
+  return function remove(): void {
+    // tslint:disable-next-line no-shadowed-variable
+    const { stack } = store;
+    for (let i = 0; i < stack.length; i++) {
+      if (stack[i].cb === cb) {
+        store.stack = stack.slice(0, i).concat(stack.slice(i + 1));
+      }
     }
-  }
+  };
 }
