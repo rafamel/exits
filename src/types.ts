@@ -1,4 +1,5 @@
 export interface IOptions {
+  logger: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'silent';
   resolver(
     type: 'signal' | 'exception' | 'rejection' | 'exit',
     arg: TSignal | Error | number

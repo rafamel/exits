@@ -2,8 +2,7 @@ import logger from '~/logger';
 import { IAttach, TSignal, IStore } from '~/types';
 import setState from '~/utils/set-state';
 import handler from '~/utils/handler';
-
-export const signals: TSignal[] = ['SIGINT', 'SIGHUP', 'SIGQUIT', 'SIGTERM'];
+import { SIGNALS } from '~/constants';
 
 export const handlers = {
   signal(store: IStore, sig: TSignal): Promise<void> {
@@ -42,10 +41,10 @@ export function attach(
 
   const update: Partial<IAttach> = {};
   if (signal && !store.handlers.signal) {
-    logger.debug('Attach to signal: ' + signals.join(', '));
+    logger.debug('Attach to signal: ' + SIGNALS.join(', '));
     update.signal = true;
     store.handlers.signal = handlers.signal.bind(null, store);
-    signals.forEach((sig: any) =>
+    SIGNALS.forEach((sig: any) =>
       process.on(sig, store.handlers.signal || (() => {}))
     );
   }
@@ -86,9 +85,9 @@ export function unattach(
 
   const update: Partial<IAttach> = {};
   if (signal && store.handlers.signal) {
-    logger.debug('Unattach from signal: ' + signals.join(', '));
+    logger.debug('Unattach from signal: ' + SIGNALS.join(', '));
     update.signal = false;
-    signals.forEach((sig: any) =>
+    SIGNALS.forEach((sig: any) =>
       process.removeListener(sig, store.handlers.signal || (() => {}))
     );
     store.handlers.signal = null;

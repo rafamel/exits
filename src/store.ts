@@ -1,5 +1,6 @@
 import resolver from '~/utils/resolver';
 import { IStore } from '~/types';
+import { DEFAULT_LOG_LEVEL } from './constants';
 
 export const store: IStore = {
   stack: [],
@@ -15,6 +16,7 @@ export const store: IStore = {
     attached: []
   },
   options: {
+    logger: DEFAULT_LOG_LEVEL,
     resolver
   }
 };
