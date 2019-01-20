@@ -62,6 +62,7 @@ export interface IStore {
     done: Array<(done: boolean) => void>;
   };
   options: IOptions;
+  process: NodeJS.Process;
   processes: {
     [key: string]: IProcess;
   };

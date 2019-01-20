@@ -37,7 +37,7 @@ export function attach(
     exit = true
   }: Partial<IAttach> = {}
 ): void {
-  const { state } = store;
+  const { state, process } = store;
 
   const update: Partial<IAttach> = {};
   if (signal && !store.handlers.signal) {
@@ -81,7 +81,7 @@ export function unattach(
     exit = true
   }: Partial<IAttach> = {}
 ): void {
-  const { state } = store;
+  const { state, process } = store;
 
   const update: Partial<IAttach> = {};
   if (signal && store.handlers.signal) {
