@@ -94,6 +94,7 @@ export function unattach(
   }
   if (exception && store.handlers.exception) {
     logger.debug('Unattach from exception');
+    update.exception = false;
     process.removeListener('uncaughtException', store.handlers.exception);
     store.handlers.exception = null;
   }
