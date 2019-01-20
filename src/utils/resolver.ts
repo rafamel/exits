@@ -13,8 +13,7 @@ export default function resolver(
       break;
     case 'exit':
       logger.debug('Exiting process with code ' + Number(arg));
-      if (Number(arg) !== 0) process.exit(Number(arg));
-      break;
+      process.exit(Number(arg));
     case 'exception':
     case 'rejection':
       logger.debug('Trowing error');
@@ -23,6 +22,7 @@ export default function resolver(
       });
       break;
     default:
+      logger.error('Resolver was called but type was not fitting');
       break;
   }
 }

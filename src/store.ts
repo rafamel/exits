@@ -5,15 +5,25 @@ import { DEFAULT_LOG_LEVEL } from './constants';
 export const store: IStore = {
   stack: [],
   state: {
+    attached: {
+      signal: false,
+      exception: false,
+      rejection: false,
+      exit: false
+    },
     triggered: null,
-    done: false,
-    attached: { signal: false, exception: false, rejection: false, exit: false }
+    done: false
   },
-  handlers: { signal: null, exception: null, rejection: null, exit: null },
+  handlers: {
+    signal: null,
+    exception: null,
+    rejection: null,
+    exit: null
+  },
   subscribers: {
+    attached: [],
     triggered: [],
-    done: [],
-    attached: []
+    done: []
   },
   options: {
     logger: DEFAULT_LOG_LEVEL,

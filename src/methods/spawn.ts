@@ -98,7 +98,7 @@ export async function killWait(store: IStore): Promise<void> {
 export default function spawn(
   store: IStore,
   cmd: string,
-  args: string[],
+  args: string[] = [],
   opts: SpawnOptions = {}
 ): { ps: ChildProcess; promise: Promise<TSignal | null> } {
   logger.debug(
