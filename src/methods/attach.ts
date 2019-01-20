@@ -33,7 +33,7 @@ export function attach(
   {
     signal = true,
     exception = true,
-    rejection = false, // TODO change this default in the future
+    rejection = true,
     exit = true
   }: Partial<IAttach> = {}
 ): void {
