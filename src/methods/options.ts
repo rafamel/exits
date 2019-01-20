@@ -8,6 +8,13 @@ export default function options(
   store: IStore,
   opts: Partial<IOptions> = {}
 ): void {
-  Object.assign(store.options, opts);
+  store.options = {
+    ...store.options,
+    ...opts,
+    spawned: {
+      ...store.options.spawned,
+      ...(opts.spawned || {})
+    }
+  };
   if (opts.logger) logger.setLevel(opts.logger);
 }

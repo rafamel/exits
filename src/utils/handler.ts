@@ -2,6 +2,7 @@ import logger from '~/logger';
 import { TSignal, IStore } from '~/types';
 import { unattach } from '~/methods/attach';
 import setState from '~/utils/set-state';
+import { play, killWait } from '~/methods/spawn';
 
 // TODO add `stop()` param in order to stop the add() flow within a task add()'ed.
 export default function handler(
@@ -28,10 +29,13 @@ export default async function handler(
     const { state, stack } = store;
     if (state.triggered) return;
 
-    logger.info('Handler triggered: ' + type);
+    if (type === 'signal' && !play(store, arg)) return;
 
     // Update state
     setState(store, { triggered: { type, arg } });
+
+    // Wait for processes to close
+    await killWait(store);
 
     while (stack.length) {
       const element = stack.shift();

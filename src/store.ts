@@ -17,6 +17,13 @@ export const store: IStore = {
   },
   options: {
     logger: DEFAULT_LOG_LEVEL,
+    spawned: {
+      signals: 'bind',
+      wait: 'bind',
+      sigterm: 5000,
+      sigkill: 10000
+    },
     resolver
-  }
+  },
+  processes: {}
 };
