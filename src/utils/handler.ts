@@ -26,8 +26,7 @@ export default async function handler(
   arg: any
 ): Promise<void> {
   try {
-    const { state, stack } = store;
-    if (state.triggered) return;
+    if (store.state.triggered) return;
 
     if (type === 'signal' && !play(store, arg)) return;
 
@@ -37,8 +36,8 @@ export default async function handler(
     // Wait for processes to close
     await killWait(store);
 
-    while (stack.length) {
-      const element = stack.shift();
+    while (store.stack.length) {
+      const element = store.stack.shift();
       // TODO only run for element.on.hasOwnProp...
       if (!element) continue;
       try {
