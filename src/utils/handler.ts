@@ -4,7 +4,6 @@ import { unattach } from '~/methods/attach';
 import setState from '~/utils/set-state';
 import { play, killWait } from '~/methods/spawn';
 
-// TODO add `stop()` param in order to stop the add() flow within a task add()'ed.
 export default function handler(
   store: IStore,
   type: 'signal',
@@ -38,12 +37,12 @@ export default async function handler(
 
     while (store.stack.length) {
       const element = store.stack.shift();
-      // TODO only run for element.on.hasOwnProp...
-      if (!element) continue;
-      try {
-        await element.cb(type, arg);
-      } catch (e) {
-        logger.error(e);
+      if (element && element.on[type]) {
+        try {
+          await element.cb(type, arg);
+        } catch (e) {
+          logger.error(e);
+        }
       }
     }
 
