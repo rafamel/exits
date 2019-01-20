@@ -14,6 +14,16 @@ export default function add(
     exit = true
   }: Partial<IAttach> = {}
 ) {
+  function remove(): void {
+    // tslint:disable-next-line no-shadowed-variable
+    const { stack } = store;
+    for (let i = 0; i < stack.length; i++) {
+      if (stack[i].cb === cb) {
+        store.stack = stack.slice(0, i).concat(stack.slice(i + 1));
+      }
+    }
+  }
+
   if (!priority) priority = 0;
   const { stack } = store;
 
@@ -25,18 +35,10 @@ export default function add(
         .slice(0, i)
         .concat(el)
         .concat(stack.slice(i));
-      return;
+      return remove;
     }
   }
   stack.push(el);
 
-  return function remove(): void {
-    // tslint:disable-next-line no-shadowed-variable
-    const { stack } = store;
-    for (let i = 0; i < stack.length; i++) {
-      if (stack[i].cb === cb) {
-        store.stack = stack.slice(0, i).concat(stack.slice(i + 1));
-      }
-    }
-  };
+  return remove;
 }
