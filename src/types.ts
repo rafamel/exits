@@ -50,12 +50,6 @@ export interface IStore {
       arg: TSignal | Error | number
     ): Promise<void> | void;
   }>;
-  handlers: {
-    signal: null | ((signal: TSignal) => Promise<void> | void);
-    exception: null | ((error: Error) => Promise<void> | void);
-    rejection: null | ((_: any, reason: Promise<any>) => Promise<void> | void);
-    exit: null | ((code: number) => Promise<void> | void);
-  };
   subscribers: {
     attached: Array<(attached: IAttach) => void>;
     triggered: Array<(triggered: TTriggered) => void>;

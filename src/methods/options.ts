@@ -1,10 +1,8 @@
-import { IOptions, IStore } from '~/types';
+import { IOptions } from '~/types';
+import store from '~/store';
 import logger from '~/logger';
 
-export default function options(
-  store: IStore,
-  opts: Partial<IOptions> = {}
-): void {
+export default function options(opts: Partial<IOptions> = {}): void {
   store.options = {
     ...store.options,
     ...opts,

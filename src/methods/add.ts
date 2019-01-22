@@ -1,7 +1,7 @@
-import { IAttach, TSignal, IStore } from '~/types';
+import { IAttach, TSignal } from '~/types';
+import store from '~/store';
 
 export default function add(
-  store: IStore,
   cb: (
     type: 'signal' | 'exception' | 'rejection' | 'exit',
     arg: TSignal | Error | number
@@ -16,29 +16,27 @@ export default function add(
 ) {
   function remove(): void {
     // tslint:disable-next-line no-shadowed-variable
-    const { stack } = store;
-    for (let i = 0; i < stack.length; i++) {
-      if (stack[i].cb === cb) {
-        store.stack = stack.slice(0, i).concat(stack.slice(i + 1));
+    for (let i = 0; i < store.stack.length; i++) {
+      if (store.stack[i].cb === cb) {
+        store.stack = store.stack.slice(0, i).concat(store.stack.slice(i + 1));
       }
     }
   }
 
   if (!priority) priority = 0;
-  const { stack } = store;
 
   const el = { cb, priority, on: { signal, exception, rejection, exit } };
 
-  for (let i = 0; i < stack.length; i++) {
-    if (priority >= stack[i].priority) {
-      store.stack = stack
+  for (let i = 0; i < store.stack.length; i++) {
+    if (priority >= store.stack[i].priority) {
+      store.stack = store.stack
         .slice(0, i)
         .concat(el)
-        .concat(stack.slice(i));
+        .concat(store.stack.slice(i));
       return remove;
     }
   }
-  stack.push(el);
+  store.stack.push(el);
 
   return remove;
 }

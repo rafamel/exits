@@ -1,5 +1,5 @@
-import { IStore } from '~/types';
+import store from '~/store';
 
-export default function clear(store: IStore) {
+export default function clear() {
   store.stack = [];
 }

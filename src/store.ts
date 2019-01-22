@@ -2,7 +2,7 @@ import resolver from '~/utils/resolver';
 import { IStore } from '~/types';
 import { DEFAULT_LOG_LEVEL } from './constants';
 
-export const store: IStore = {
+const store: IStore = {
   stack: [],
   state: {
     attached: {
@@ -13,12 +13,6 @@ export const store: IStore = {
     },
     triggered: null,
     done: false
-  },
-  handlers: {
-    signal: null,
-    exception: null,
-    rejection: null,
-    exit: null
   },
   subscribers: {
     attached: [],
@@ -39,3 +33,5 @@ export const store: IStore = {
   process: process,
   processes: {}
 };
+
+export default store;

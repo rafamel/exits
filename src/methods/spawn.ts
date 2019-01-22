@@ -1,20 +1,23 @@
 import chalk from 'chalk';
 import { spawn as _spawn, SpawnOptions, ChildProcess } from 'child_process';
 import logger from '~/logger';
-import { TSignal, IStore, IProcess } from '~/types';
+import { TSignal, IProcess } from '~/types';
 import { SIGNALS } from '~/constants';
 import uuid from 'uuid/v4';
 import { deferred, timeout } from 'promist';
+import store from '~/store';
 
 /**
  * Returns `true` if tasks should triggered, `false` otherwise.
  */
-export function play(store: IStore, signal: TSignal): boolean {
-  const { spawned } = store.options;
+export function play(signal: TSignal): boolean {
+  const { processes, options } = store;
+  const { spawned } = options;
+
   if (spawned.signals === 'none') return true;
 
   let res = true;
-  const filtered = Object.values(store.processes).filter(
+  const filtered = Object.values(processes).filter(
     (x) => x.running && !x.triggered
   );
 
@@ -40,12 +43,13 @@ export function play(store: IStore, signal: TSignal): boolean {
   return res;
 }
 
-export async function killWait(store: IStore): Promise<void> {
-  const { spawned } = store.options;
+export async function killWait(): Promise<void> {
+  const { processes, options } = store;
+  const { spawned } = options;
 
   if (spawned.wait === 'none') return;
   const getFiltered = () =>
-    Object.values(store.processes).filter((x) => {
+    Object.values(processes).filter((x) => {
       switch (spawned.wait) {
         case 'bind':
           return x.running && !x.opts.detached;
@@ -64,6 +68,8 @@ export async function killWait(store: IStore): Promise<void> {
 
   logger.debug('Waiting for proceses to close');
 
+  // TODO take into account incoming proccesses (we need to also listen on
+  // close for processes starting after)
   const p = deferred();
   filtered.forEach(({ ps }) => {
     ps.on('close', () => {
@@ -96,7 +102,6 @@ export async function killWait(store: IStore): Promise<void> {
 }
 
 export default function spawn(
-  store: IStore,
   cmd: string,
   args: string[] = [],
   opts: SpawnOptions = {}

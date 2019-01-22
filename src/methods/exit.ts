@@ -1,9 +1,9 @@
 import handler from '~/utils/handler';
-import { IStore } from '~/types';
+import store from '~/store';
 
-export default async function exit(store: IStore, code: number): Promise<void> {
+export default async function exit(code: number): Promise<void> {
   if (store.state.attached && store.state.attached.exit) {
-    return handler(store, 'exit', code);
+    return handler('exit', code);
   }
 
   return store.options.resolver('exit', code);

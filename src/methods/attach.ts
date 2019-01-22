@@ -1,20 +1,20 @@
 import logger from '~/logger';
-import { IAttach, TSignal, IStore } from '~/types';
-import setState from '~/utils/set-state';
+import { IAttach, TSignal } from '~/types';
 import handler from '~/utils/handler';
 import { SIGNALS } from '~/constants';
+import store from '~/store';
+import setState from '~/utils/set-state';
 
 export const handlers = {
-  signal(store: IStore, sig: TSignal): Promise<void> {
-    return handler(store, 'signal', sig);
+  signal(sig: TSignal): Promise<void> {
+    return handler('signal', sig);
   },
-  exception(store: IStore, err: Error): Promise<void> {
-    return handler(store, 'exception', err);
+  exception(err: Error): Promise<void> {
+    return handler('exception', err);
   },
-  async rejection(store: IStore, _: any, reason: Promise<any>): Promise<void> {
+  async rejection(_: any, reason: Promise<any>): Promise<void> {
     const err = await reason.catch((e) => e);
     return handler(
-      store,
       'rejection',
       err instanceof Error
         ? err
@@ -23,95 +23,77 @@ export const handlers = {
           )
     );
   },
-  exit(store: IStore, code: number): Promise<void> {
-    return handler(store, 'exit', code);
+  exit(code: number): Promise<void> {
+    return handler('exit', code);
   }
 };
 
-export function attach(
-  store: IStore,
-  {
-    signal = true,
-    exception = true,
-    rejection = true,
-    exit = true
-  }: Partial<IAttach> = {}
-): void {
+export function attach({
+  signal = true,
+  exception = true,
+  rejection = true,
+  exit = true
+}: Partial<IAttach> = {}): void {
   const { state, process } = store;
 
   const update: Partial<IAttach> = {};
-  if (signal && !store.handlers.signal) {
+  if (signal && !state.attached.signal) {
     logger.debug('Attach to signal: ' + SIGNALS.join(', '));
     update.signal = true;
-    store.handlers.signal = handlers.signal.bind(null, store);
-    SIGNALS.forEach((sig: any) =>
-      process.on(sig, store.handlers.signal || (() => {}))
-    );
+    SIGNALS.forEach((sig: any) => process.on(sig, handlers.signal));
   }
-  if (exception && !store.handlers.exception) {
+  if (exception && !state.attached.exception) {
     logger.debug('Attach to exception');
     update.exception = true;
-    store.handlers.exception = handlers.exception.bind(null, store);
-    process.on('uncaughtException', store.handlers.exception);
+    process.on('uncaughtException', handlers.exception);
   }
-  if (rejection && !store.handlers.rejection) {
+  if (rejection && !state.attached.rejection) {
     logger.debug('Attach to rejection');
     update.rejection = true;
-    store.handlers.rejection = handlers.rejection.bind(null, store);
-    process.on('unhandledRejection', store.handlers.rejection);
+    process.on('unhandledRejection', handlers.rejection);
   }
-  if (exit && !store.handlers.exit) {
+  if (exit && !state.attached.exit) {
     logger.debug('Attach to exit (beforeExit)');
     update.exit = true;
-    store.handlers.exit = handlers.exit.bind(null, store);
-    process.on('beforeExit', store.handlers.exit);
+    process.on('beforeExit', handlers.exit);
   }
 
   if (Object.keys(update).length) {
-    setState(store, { attached: { ...state.attached, ...update } });
+    setState({ attached: { ...state.attached, ...update } });
   }
 }
 
-export function unattach(
-  store: IStore,
-  {
-    signal = true,
-    exception = true,
-    rejection = true,
-    exit = true
-  }: Partial<IAttach> = {}
-): void {
+export function unattach({
+  signal = true,
+  exception = true,
+  rejection = true,
+  exit = true
+}: Partial<IAttach> = {}): void {
   const { state, process } = store;
 
   const update: Partial<IAttach> = {};
-  if (signal && store.handlers.signal) {
+  if (signal && state.attached.signal) {
     logger.debug('Unattach from signal: ' + SIGNALS.join(', '));
     update.signal = false;
-    SIGNALS.forEach((sig: any) =>
-      process.removeListener(sig, store.handlers.signal || (() => {}))
-    );
-    store.handlers.signal = null;
+    SIGNALS.forEach((sig: any) => process.removeListener(sig, handlers.signal));
   }
-  if (exception && store.handlers.exception) {
+  if (exception && state.attached.exception) {
     logger.debug('Unattach from exception');
     update.exception = false;
-    process.removeListener('uncaughtException', store.handlers.exception);
-    store.handlers.exception = null;
+    process.removeListener('uncaughtException', handlers.exception);
   }
-  if (rejection && store.handlers.rejection) {
+  if (rejection && state.attached.rejection) {
     logger.debug('Unattach from rejection');
     update.rejection = false;
-    process.removeListener('unhandledRejection', store.handlers.rejection);
-    store.handlers.rejection = null;
+    process.removeListener('unhandledRejection', handlers.rejection);
   }
-  if (exit && store.handlers.exit) {
+  if (exit && state.attached.exit) {
     logger.debug('Unattach from exit (beforeExit)');
     update.exit = false;
-    process.removeListener('beforeExit', store.handlers.exit);
-    store.handlers.exit = null;
+    process.removeListener('beforeExit', handlers.exit);
   }
 
   if (Object.keys(update).length) {
-    setState(store, { attached: { ...state.attached, ...update } });
+    setState({ attached: { ...state.attached, ...update } });
   }
 }

@@ -1,39 +1,30 @@
 import logger from '~/logger';
-import { TSignal, IStore } from '~/types';
+import { TSignal } from '~/types';
 import { unattach } from '~/methods/attach';
+import store from '~/store';
 import setState from '~/utils/set-state';
 import { play, killWait } from '~/methods/spawn';
 
+export default function handler(type: 'signal', arg: TSignal): Promise<void>;
 export default function handler(
-  store: IStore,
-  type: 'signal',
-  arg: TSignal
-): Promise<void>;
-export default function handler(
-  store: IStore,
   type: 'exception' | 'rejection',
   arg: Error
 ): Promise<void>;
-export default function handler(
-  store: IStore,
-  type: 'exit',
-  arg: number
-): Promise<void>;
+export default function handler(type: 'exit', arg: number): Promise<void>;
 export default async function handler(
-  store: IStore,
   type: 'signal' | 'exception' | 'rejection' | 'exit',
   arg: any
 ): Promise<void> {
   try {
     if (store.state.triggered) return;
 
-    if (type === 'signal' && !play(store, arg)) return;
+    if (type === 'signal' && !play(arg)) return;
 
     // Update state
-    setState(store, { triggered: { type, arg } });
+    setState({ triggered: { type, arg } });
 
     // Wait for processes to close
-    await killWait(store);
+    await killWait();
 
     while (store.stack.length) {
       const element = store.stack.shift();
@@ -47,9 +38,9 @@ export default async function handler(
     }
 
     // Unattach self
-    unattach(store);
+    unattach();
     // Update state
-    setState(store, { done: true });
+    setState({ done: true });
   } catch (e) {
     logger.error(e);
   }

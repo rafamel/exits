@@ -1,6 +1,6 @@
 import deep from 'lodash.clonedeep';
-import { IStore } from '~/types';
+import store from '~/store';
 
-export default function(store: IStore) {
+export default function() {
   return deep(store.state);
 }
