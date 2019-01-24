@@ -9,7 +9,9 @@ const {
   DOCS_DIR,
   CONFIG_DIR,
   EXTENSIONS,
-  TYPESCRIPT
+  TYPESCRIPT,
+  BIN_ENTRY,
+  BIN_OUT_DIR
 } = require('./project.config');
 const DOT_EXTENSIONS = '.' + EXTENSIONS.replace(/,/g, ',.');
 
@@ -17,15 +19,17 @@ process.env.LOG_LEVEL = 'disable';
 module.exports = scripts({
   build: series(
     'nps validate',
-    exit0(`shx rm -r ${OUT_DIR}`),
-    `shx mkdir ${OUT_DIR}`,
+    exit0(`shx rm -r ${OUT_DIR} ${BIN_OUT_DIR}`),
+    `shx mkdir ${OUT_DIR} ${BIN_OUT_DIR}`,
     `jake fixpackage["${OUT_DIR}"]`,
-    'nps private.build'
+    'nps private.build',
+    `pkg --out-path ${BIN_OUT_DIR} --targets node8-linux-x86,node8-macos-x86,node8-win-x86 ${BIN_ENTRY}`
   ),
   publish: `nps build && cd ${OUT_DIR} && npm publish`,
   watch: series(
     exit0(`shx rm -r ${OUT_DIR}`),
     `shx mkdir ${OUT_DIR}`,
+    `jake fixpackage["${OUT_DIR}"]`,
     `onchange "./src/**/*.{${EXTENSIONS}}" --initial --kill -- nps private.watch`
   ),
   fix: [
@@ -43,19 +47,7 @@ module.exports = scripts({
       '-n eslint,tslint',
       '-c yellow,blue'
     ].join(' '),
-    md: series(
-      `markdownlint *.md --config ${dir('markdown.json')}`,
-      'jake run:conditional[' +
-        [
-          '"Interactive spellcheck?"',
-          `"mdspell --en-us '**/*.md' '!**/node_modules/**/*.md'"`,
-          `"mdspell -r --en-us '**/*.md' '!**/node_modules/**/*.md'"`,
-          'No',
-          '4',
-          'log'
-        ].join(',') +
-        ']'
-    ),
+    md: `markdownlint *.md --config ${dir('markdown.json')}`,
     scripts: 'jake lintscripts[' + __dirname + ']'
   },
   test: {

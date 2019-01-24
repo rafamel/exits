@@ -18,9 +18,7 @@ export const handlers = {
       'rejection',
       err instanceof Error
         ? err
-        : Error(
-            err && String(err) ? String(err) : 'Unhandled promise rejection'
-          )
+        : Error(typeof err === 'string' ? err : 'Unhandled promise rejection')
     );
   },
   exit(code: number): Promise<void> {

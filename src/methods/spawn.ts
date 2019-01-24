@@ -8,7 +8,7 @@ import { deferred, timeout } from 'promist';
 import store from '~/store';
 
 /**
- * Returns `true` if tasks should triggered, `false` otherwise.
+ * Returns `true` if tasks should be triggered, `false` otherwise.
  */
 export function play(signal: TSignal): boolean {
   const { processes, options } = store;

@@ -1,18 +1,22 @@
 import { SpawnOptions, ChildProcess } from 'child_process';
 
 export interface IOptions {
-  logger: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'silent';
-  spawned: {
-    signals: 'all' | 'bind' | 'detached' | 'none';
-    wait: 'all' | 'bind' | 'detached' | 'none';
-    sigterm?: null | number;
-    sigkill?: null | number;
-  };
+  logger: TLogger;
+  spawned: ISpawned;
   resolver(
     type: 'signal' | 'exception' | 'rejection' | 'exit',
     arg: TSignal | Error | number
   ): void;
 }
+
+export interface ISpawned {
+  signals: 'all' | 'bind' | 'detached' | 'none';
+  wait: 'all' | 'bind' | 'detached' | 'none';
+  sigterm?: null | number;
+  sigkill?: null | number;
+}
+
+export type TLogger = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'silent';
 
 export type TSignal = 'SIGINT' | 'SIGHUP' | 'SIGQUIT' | 'SIGTERM';
 
