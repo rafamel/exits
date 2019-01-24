@@ -5,7 +5,7 @@ module.exports = {
   testEnvironment: 'node',
   collectCoverage: true,
   collectCoverageFrom: [`<rootDir>/src/**/*.{${EXTENSIONS}}`],
-  modulePathIgnorePatterns: ['<rootDir>/build'],
+  modulePathIgnorePatterns: ['<rootDir>/build', '<rootDir>/src/bin'],
   moduleFileExtensions: EXT_ARR.concat(['json']),
   testMatch: [
     `**/__tests__/**/*.{${EXTENSIONS}}`,
