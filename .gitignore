@@ -1,6 +1,7 @@
 # Project Specific #
 ####################
 /docs
+/bin
 
 # Node, Frameworks, Editors #
 #############################

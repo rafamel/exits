@@ -2,6 +2,7 @@
   "include": ["src/**/*", "test/**/*"],
   "exclude": ["node_modules"],
   // https://www.typescriptlang.org/docs/handbook/compiler-options.html
+  // http://json.schemastore.org/tsconfig
   "compilerOptions": {
     /* Basic Options */
     "target": "esnext" /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */,
@@ -10,6 +11,7 @@
     // "allowJs": true                        /* Allow javascript files to be compiled. */,
     // "checkJs": true                        /* Report errors in .js files. */,
     // "jsx": "preserve",                     /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
+    "resolveJsonModule": true /* Include modules imported with '.json' extension. */,
     "declaration": true /* Generates corresponding '.d.ts' file. */,
     // "declarationMap": true,                /* Generates a sourcemap for each corresponding '.d.ts' file. */
     // "sourceMap": true,                     /* Generates corresponding '.map' file. */

@@ -15,6 +15,9 @@
     "cli",
     "node"
   ],
+  "bin": {
+    "exits": "bin/exits.js"
+  },
   "scripts": {
     "prepublishOnly": "exit 1",
     "start": "npm run watch",
@@ -92,6 +95,7 @@
     "typescript": "^3.2.4"
   },
   "dependencies": {
+    "ajv": "^6.7.0",
     "commander": "^2.19.0",
     "lodash.clonedeep": "^4.5.0",
     "loglevel": "^1.6.1",
