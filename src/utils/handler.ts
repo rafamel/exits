@@ -26,16 +26,20 @@ export default async function handler(
     // Wait for processes to close
     await killWait();
 
+    const context = {};
     while (store.stack.length) {
       const element = store.stack.shift();
       if (element && element.on[type]) {
         try {
-          await element.cb(type, arg);
+          await element.cb(type, arg, context);
         } catch (e) {
           logger.error(e);
         }
       }
     }
+
+    // Wait for processes to close
+    await killWait();
 
     // Unattach self
     unattach();

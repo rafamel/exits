@@ -4,7 +4,8 @@ import store from '~/store';
 export default function add(
   cb: (
     type: 'signal' | 'exception' | 'rejection' | 'exit',
-    arg: TSignal | Error | number
+    arg: TSignal | Error | number,
+    context: any
   ) => Promise<void> | void,
   priority?: number | null,
   {
