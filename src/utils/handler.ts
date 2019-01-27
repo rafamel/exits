@@ -3,7 +3,8 @@ import { TSignal } from '~/types';
 import { unattach } from '~/methods/attach';
 import store from '~/store';
 import setState from '~/utils/set-state';
-import { play, killWait } from '~/methods/spawn';
+import playSignal from '~/utils/play-signal';
+import killWait from '~/utils/kill-wait';
 
 export default function handler(type: 'signal', arg: TSignal): Promise<void>;
 export default function handler(
@@ -18,7 +19,7 @@ export default async function handler(
   try {
     if (store.state.triggered) return;
 
-    if (type === 'signal' && !play(arg)) return;
+    if (type === 'signal' && !playSignal(arg)) return;
 
     // Update state
     setState({ triggered: { type, arg } });
