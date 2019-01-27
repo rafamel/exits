@@ -40,13 +40,15 @@ export default async function handler(
 
     // Wait for processes to close
     await killWait();
-
-    // Unattach self
-    unattach();
-    // Update state
-    setState({ done: true });
   } catch (e) {
     logger.error(e);
   }
+
+  // Update state
+  setState({ done: true });
+
+  // Unattach self
+  unattach();
+
   await store.options.resolver(type, arg);
 }

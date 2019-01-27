@@ -68,8 +68,6 @@ export async function killWait(): Promise<void> {
 
   logger.debug('Waiting for proceses to close');
 
-  // TODO take into account incoming proccesses (we need to also listen on
-  // close for processes starting after)
   const p = deferred();
   filtered.forEach(({ ps }) => {
     ps.on('close', () => {

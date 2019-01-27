@@ -40,8 +40,8 @@ export interface IState {
 export interface IProcess {
   ps: ChildProcess;
   opts: SpawnOptions;
-  triggered: boolean;
   running: boolean;
+  triggered: boolean;
 }
 
 export interface IStore {
