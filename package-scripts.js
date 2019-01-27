@@ -23,7 +23,7 @@ module.exports = scripts({
     `shx mkdir ${OUT_DIR} ${BIN_OUT_DIR}`,
     `jake fixpackage["${OUT_DIR}"]`,
     'nps private.build',
-    `pkg --out-path ${BIN_OUT_DIR} --targets node8-linux-x86,node8-macos-x86,node8-win-x86 ${BIN_ENTRY}`
+    `pkg --out-path ${BIN_OUT_DIR} --targets node8-linux-x86,node8-macos-x86,node8-win-x86,node8-linux-x64,node8-macos-x64,node8-win-x64 ${BIN_ENTRY}`
   ),
   publish: `nps build && cd ${OUT_DIR} && npm publish`,
   watch: series(
