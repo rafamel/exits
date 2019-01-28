@@ -14,7 +14,7 @@ export default function add(
     rejection = true,
     exit = true
   }: Partial<IAttach> = {}
-) {
+): () => void {
   function remove(): void {
     // tslint:disable-next-line no-shadowed-variable
     for (let i = 0; i < store.stack.length; i++) {

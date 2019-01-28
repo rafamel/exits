@@ -6,13 +6,12 @@ import setState from '~/utils/set-state';
 import playSignal from '~/utils/play-signal';
 import killWait from '~/utils/kill-wait';
 
-export default function handler(type: 'signal', arg: TSignal): Promise<void>;
-export default function handler(
-  type: 'exception' | 'rejection',
-  arg: Error
-): Promise<void>;
-export default function handler(type: 'exit', arg: number): Promise<void>;
-export default async function handler(
+export default handler;
+
+function handler(type: 'signal', arg: TSignal): Promise<void>;
+function handler(type: 'exception' | 'rejection', arg: Error): Promise<void>;
+function handler(type: 'exit', arg: number): Promise<void>;
+async function handler(
   type: 'signal' | 'exception' | 'rejection' | 'exit',
   arg: any
 ): Promise<void> {

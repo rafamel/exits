@@ -6,7 +6,7 @@ import store from '~/store';
 const handler: any = _handler;
 jest.mock('~/utils/handler');
 
-const resetHandler = () => {
+const resetHandler = (): void => {
   handler.mockReset();
   handler.mockImplementation(() => Promise.resolve('foo'));
 };

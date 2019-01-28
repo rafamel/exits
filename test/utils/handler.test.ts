@@ -18,16 +18,17 @@ const playSignal: any = _playSignal;
 const killWait: any = _killWait;
 const setState: any = _setState;
 
-const reset = () => {
+const reset = (): void => {
   _reset();
   store.options.resolver = jest.fn();
 };
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const createTask = (cb: any) => ({
   priority: 0,
   on: { signal: true, exception: true, rejection: true, exit: true },
   cb
 });
-const addToStack = () => {
+const addToStack = (): void => {
   store.stack = [
     createTask(() => wait(1000)),
     {
@@ -257,13 +258,13 @@ describe(`errors`, () => {
 
     const arr: number[] = [];
     store.stack = [
-      createTask((_: any, __: any, context: any) => arr.push(1)),
-      createTask((_: any, __: any, context: any) => Promise.reject(Error())),
-      createTask((_: any, __: any, context: any) => arr.push(2)),
-      createTask((_: any, __: any, context: any) => {
+      createTask(() => arr.push(1)),
+      createTask(() => Promise.reject(Error())),
+      createTask(() => arr.push(2)),
+      createTask(() => {
         throw Error();
       }),
-      createTask((_: any, __: any, context: any) => arr.push(3))
+      createTask(() => arr.push(3))
     ];
 
     await handler('exit', 1);

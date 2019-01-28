@@ -12,7 +12,7 @@ const handler: any = _handler;
 jest.mock('~/utils/set-state');
 jest.mock('~/utils/handler');
 
-const create = (on: any) => {
+const create = (on: any): void => {
   reset();
   setState.mockReset();
   store.process = {
@@ -29,7 +29,7 @@ const create = (on: any) => {
     }
   };
 };
-const resetHandler = () => {
+const resetHandler = (): void => {
   handler.mockReset();
   handler.mockImplementation(() => Promise.resolve('foo'));
 };

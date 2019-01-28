@@ -35,7 +35,7 @@ test(`Rejects and stops when state is triggered`, async () => {
   // @ts-ignore
   setTimeout(() => (store.state.triggered = {}), 500);
   const arr: boolean[] = [];
-  const fn = control(function*(...args) {
+  const fn = control(function*() {
     let a = yield 1;
     yield wait(250);
     a = yield Promise.resolve(a + 1);

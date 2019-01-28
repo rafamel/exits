@@ -4,7 +4,7 @@ import { add } from '~/index';
 
 test(`Adds element to store`, () => {
   reset();
-  const el = () => {};
+  const el = (): void => {};
 
   add(el);
 
@@ -54,8 +54,8 @@ test(`Adds with custom priority & attachments`, () => {
 
 test(`Adds elements in reverse order`, () => {
   reset();
-  const el1 = () => {};
-  const el2 = () => {};
+  const el1 = (): void => {};
+  const el2 = (): void => {};
 
   add(el1);
   add(el2);

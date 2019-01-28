@@ -4,7 +4,7 @@ import logger from '~/logger';
 
 logger.setLevel('silent');
 
-const reset = () => {
+const reset = (): void => {
   // @ts-ignore
   store.process = {
     pid: 777,

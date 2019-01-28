@@ -1,14 +1,9 @@
 import deep from 'lodash.clonedeep';
 import store from '~/store';
 
-export default function reset() {
-  // tslint:disable-next-line object-literal-shorthand
-  Object.assign(store, { ...deep(cloned), process: process });
-}
-
 export const cloned = deep({ ...store, process: null });
 
-export function populateProcesses() {
+export function populateProcesses(): void {
   store.processes = {
     foo: {
       // @ts-ignore
@@ -32,4 +27,9 @@ export function populateProcesses() {
       running: true
     }
   };
+}
+
+export default function reset(): void {
+  // tslint:disable-next-line object-literal-shorthand
+  Object.assign(store, { ...deep(cloned), process: process });
 }

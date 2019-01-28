@@ -1,16 +1,12 @@
 import { TTriggered, IAttach } from '~/types';
 import store from '~/store';
 
-export default function on(
-  event: 'attached',
-  cb: (attached: IAttach) => void
-): void;
-export default function on(
-  event: 'triggered',
-  cb: (triggered: TTriggered) => void
-): void;
-export default function on(event: 'done', cb: (done: boolean) => void): void;
-export default function on(
+export default on;
+
+function on(event: 'attached', cb: (attached: IAttach) => void): void;
+function on(event: 'triggered', cb: (triggered: TTriggered) => void): void;
+function on(event: 'done', cb: (done: boolean) => void): void;
+function on(
   event: 'triggered' | 'done' | 'attached',
   cb: (val: any) => void
 ): void {

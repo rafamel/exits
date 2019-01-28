@@ -6,7 +6,7 @@ import store from '~/store';
 
 jest.mock('child_process');
 const _spawn: any = __spawn;
-const reset = () => {
+const reset = (): void => {
   _reset();
   _spawn.mockReset();
   _spawn.mockImplementation(() => ({

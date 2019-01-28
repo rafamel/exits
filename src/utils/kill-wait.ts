@@ -8,7 +8,7 @@ export default async function killWait(): Promise<void> {
   const { spawned } = options;
 
   if (spawned.wait === 'none') return;
-  const getFiltered = () =>
+  const getFiltered = (): IProcess[] =>
     Object.values(processes).filter((x) => {
       switch (spawned.wait) {
         case 'bind':

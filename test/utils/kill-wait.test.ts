@@ -3,7 +3,7 @@ import reset, { populateProcesses as populate } from '../reset-store';
 import killWait from '~/utils/kill-wait';
 import { wait } from 'promist';
 
-const implementation = async (ev: string, cb: any) => {
+const implementation = async (ev: string, cb: any): Promise<void> => {
   if (ev === 'close') {
     await wait(750);
     cb();
@@ -111,7 +111,7 @@ test(`Sends SIGTERM if not closed`, async () => {
   // @ts-ignore
   store.processes.foo.ps.on.mockImplementation(implementation);
   store.processes.bar.running = false;
-  let cb = () => {};
+  let cb = (): void => {};
   // @ts-ignore
   store.processes.baz.ps.on.mockImplementation((_, _cb) => {
     cb = _cb;
@@ -144,7 +144,7 @@ test(`Sends SIGKILL if not closed`, async () => {
   // @ts-ignore
   store.processes.foo.ps.on.mockImplementation(implementation);
   store.processes.bar.running = false;
-  let cb = () => {};
+  let cb = (): void => {};
   // @ts-ignore
   store.processes.baz.ps.on.mockImplementation((_, _cb) => {
     cb = _cb;
