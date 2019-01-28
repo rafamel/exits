@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 
+import path from 'path';
+import fs from 'fs';
 import program from 'commander';
 import chalk from 'chalk';
+import pify from 'pify';
 import args from './cmd-args';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { options, attach, add, spawn } from '~/index';
 import Ajv from 'ajv';
 import draft06 from 'ajv/lib/refs/json-schema-draft-06.json';
-import pkg from '~/../package.json';
 import logger from '~/logger';
 
 const schema = {
@@ -29,7 +31,10 @@ const schema = {
   }
 };
 
-(() => {
+(async () => {
+  const pkg = JSON.parse(
+    await pify(fs.readFile)(path.join(__dirname, '../package.json'))
+  );
   const ajv = new Ajv();
   ajv.addMetaSchema(draft06);
 
