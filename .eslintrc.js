@@ -1,18 +1,20 @@
 const globals = require('eslint-restricted-globals');
+const { EXT_JS, EXT_TS } = require('./project.config');
+const { configs: ts } = require('@typescript-eslint/eslint-plugin');
 
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
   extends: ['standard', 'plugin:import/errors', 'prettier'],
   env: {
     node: true,
     jest: true
   },
   parserOptions: {
-    impliedStrict: true
+    impliedStrict: true,
+    sourceType: 'module'
   },
-  plugins: ['prettier', 'jest', 'import', 'babel'],
-  globals: { Partial: true },
+  plugins: ['prettier', 'jest', 'import'],
+  globals: {},
   rules: {
     /* DISABLED */
     'standard/no-callback-literal': 0,
@@ -23,20 +25,59 @@ module.exports = {
     ],
     'no-unused-vars': 1,
     'no-console': 1,
-    'babel/no-invalid-this': 1,
-    'babel/semi': 1,
     /* ERRORS */
-    'no-restricted-globals': [2, 'fetch'].concat(globals), // Add custom globals
-    'prettier/prettier': [2, require('./.prettierrc')] // Prettier
+    // Add custom globals
+    'no-restricted-globals': [2, 'fetch'].concat(globals),
+    // Prettier
+    'prettier/prettier': [2, require('./.prettierrc')]
   },
-  settings: {
-    // babel-plugin-module-resolver
-    'import/resolver': {
-      'babel-module': {}
+  overrides: [
+    /* JAVASCRIPT */
+    {
+      files: [`*.{${EXT_JS}}`],
+      parser: 'babel-eslint',
+      plugins: ['babel'],
+      rules: {
+        'babel/no-invalid-this': 1,
+        'babel/semi': 1
+      },
+      settings: {
+        // babel-plugin-module-resolver
+        'import/resolver': {
+          'babel-module': {}
+        }
+      }
     },
-    // eslint-import-resolver-typescript
-    'import/resolver': {
-      typescript: {}
+    /* TYPESCRIPT */
+    {
+      files: [`*.{${EXT_TS}}`],
+      parser: '@typescript-eslint/parser',
+      plugins: ['@typescript-eslint'],
+      // Overrides don't allow for extends
+      rules: Object.assign(ts.recommended.rules, {
+        /* DISABLED */
+        '@typescript-eslint/indent': 0,
+        '@typescript-eslint/no-explicit-any': 0,
+        /* WARNINGS */
+        '@typescript-eslint/no-unused-vars': [
+          1,
+          {
+            args: 'after-used',
+            argsIgnorePattern: '_.*',
+            ignoreRestSiblings: true
+          }
+        ],
+        /* ERRORS */
+        '@typescript-eslint/interface-name-prefix': [2, 'always'],
+        '@typescript-eslint/no-use-before-define': [2, { functions: false }],
+        '@typescript-eslint/array-type': [2, 'array-simple']
+      }),
+      settings: {
+        // eslint-import-resolver-typescript
+        'import/resolver': {
+          typescript: {}
+        }
+      }
     }
-  }
+  ]
 };

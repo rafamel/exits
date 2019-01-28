@@ -2,7 +2,7 @@ desc('Conditional command run');
 task(
   'conditional',
   { async: true },
-  async (message, cmdTrue, cmdFalse, defaultOption = 'y', timeout, log) => {
+  async (message, cmdTrue, cmdFalse, defaultOption = 'y', timeout) => {
     isTrue = (x) => {
       if (!x) x = defaultOption;
       return x.toLowerCase() === 'y' || x.toLowerCase() === 'yes';
@@ -37,7 +37,10 @@ task(
     const is = isTrue(res);
     const cmd = is ? cmdTrue : cmdFalse;
 
-    if (log) console.log(`\nExecuting (${is ? 'Y' : 'N'}):`, cmd);
-    jake.exec(cmd, () => process.exit(), { interactive: true });
+    if (!cmd) process.exit();
+    else {
+      console.log(`\nExecuting (${is ? 'Y' : 'N'}):`, cmd);
+      jake.exec(cmd, () => process.exit(), { interactive: true });
+    }
   }
 );

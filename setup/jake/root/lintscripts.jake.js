@@ -3,7 +3,7 @@ const path = require('path');
 
 desc('Checks nps scripts are available as npm run scripts');
 task('lintscripts', (ROOT_DIR, fix) => {
-  if (!ROOT_DIR) ROOT_DIR = '../../../';
+  if (!ROOT_DIR) throw Error('No root path was passed');
   const nps = require(path.join(ROOT_DIR, 'package-scripts'));
   const packageJson = require(path.join(ROOT_DIR, 'package.json'));
   const scripts = nps.scripts;

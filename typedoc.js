@@ -6,5 +6,5 @@ module.exports = {
   excludeExternals: true,
   moduleResolution: 'node',
   module: 'system',
-  exclude: ['**/utils/**/*.ts', '**/store.ts', '**/logger.ts']
+  exclude: ['**/internal/**/*.ts']
 };
