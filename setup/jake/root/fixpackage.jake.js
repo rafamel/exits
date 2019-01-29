@@ -1,9 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const hjson = require('hjson');
 
-desc('Modifies package.json in output directory');
-task('fixpackage', (ROOT_DIR, OUT_DIR, mode = 'package') => {
+desc('Modifies package.json in output directory to match build structure');
+task('fixpackage', (ROOT_DIR, OUT_DIR) => {
   if (!ROOT_DIR || !OUT_DIR) {
     throw Error('No root or output paths were passed');
   }
@@ -28,22 +27,4 @@ task('fixpackage', (ROOT_DIR, OUT_DIR, mode = 'package') => {
     path.join(ROOT_DIR, OUT_DIR, 'package.json'),
     JSON.stringify(pkg, null, 2)
   );
-
-  // Modify tsconfig
-  if (fs.existsSync(path.join(ROOT_DIR, 'tsconfig.json'))) {
-    const tsconfig = hjson.parse(
-      String(fs.readFileSync(path.join(ROOT_DIR, 'tsconfig.json')))
-    );
-    delete tsconfig.include;
-    delete tsconfig.exclude;
-    const cpo = tsconfig.compilerOptions;
-    cpo.paths = Object.keys(cpo.paths || {}).reduce((acc, key) => {
-      acc[key] = cpo.paths[key].map((x) => x.replace(/^(\.\/)?src\//, './'));
-      return acc;
-    }, {});
-    fs.writeFileSync(
-      path.join(ROOT_DIR, OUT_DIR, 'tsconfig.json'),
-      JSON.stringify(tsconfig, null, 2)
-    );
-  }
 });

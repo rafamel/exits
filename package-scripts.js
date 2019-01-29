@@ -10,8 +10,6 @@ const {
   OUT_DIR,
   DOCS_DIR,
   CONFIG_DIR,
-  BIN_DIR,
-  BIN_ARCHS,
   EXT_JS,
   EXT_TS,
   RELEASE_BUILD,
@@ -26,21 +24,16 @@ module.exports = scripts({
   build: {
     default:
       'cross-env NODE_ENV=production' +
-      ' nps validate build.prepare build.transpile build.declarations build.bin',
+      ' nps validate build.prepare build.transpile build.declaration',
     prepare: series(
-      `jake run:zero["shx rm -r ${OUT_DIR} ${BIN_DIR}"]`,
+      `jake run:zero["shx rm -r ${OUT_DIR}"]`,
       `shx mkdir ${OUT_DIR}`,
       `jake run:zero["shx cp README* LICENSE* CHANGELOG* ${OUT_DIR}/"]`,
       `jake fixpackage["${__dirname}","${OUT_DIR}"]`
     ),
     transpile: `babel src --out-dir ${OUT_DIR} --extensions ${DOT_EXT} --source-maps inline`,
-    declarations: series(
-      TS && `tsc --emitDeclarationOnly --outDir ${OUT_DIR}/typings`,
-      TS && `shx cp -r ${OUT_DIR}/typings/src/* ${OUT_DIR}/`,
-      TS && `shx rm -r ${OUT_DIR}/typings`
-    ),
-    bin: pkg.bin
-      ? `pkg --out-path ${BIN_DIR} -t ${BIN_ARCHS} ${OUT_DIR}/package.json`
+    declaration: TS
+      ? `ttsc --project ttsconfig.json --outDir ${OUT_DIR}`
       : 'shx echo'
   },
   publish: `cd ${OUT_DIR} && npm publish`,
@@ -55,7 +48,7 @@ module.exports = scripts({
     `--config "${dir('.prettierrc.js')}"`,
     `--ignore-path "${dir('.prettierignore')}"`
   ].join(' '),
-  types: TS && 'tsc --noEmit',
+  types: TS && 'tsc',
   lint: {
     default: `eslint ./src ./test --ext ${DOT_EXT} -c ${dir('.eslintrc.js')}`,
     md: `markdownlint README.md --config ${dir('markdown.json')}`,
@@ -83,13 +76,13 @@ module.exports = scripts({
   changelog: 'conventional-changelog -p angular -i CHANGELOG.md -s',
   update: series('npm update --save/save-dev', 'npm outdated'),
   clean: series(
-    `jake run:zero["shx rm -r ${OUT_DIR} ${DOCS_DIR} ${BIN_DIR} coverage CHANGELOG.md"]`,
+    `jake run:zero["shx rm -r ${OUT_DIR} ${DOCS_DIR} coverage CHANGELOG.md"]`,
     'shx rm -rf node_modules'
   ),
   // Private
   private: {
     watch:
-      'concurrently "nps build.transpile" "nps build.declarations" "nps lint"' +
+      'concurrently "nps build.transpile" "nps build.declaration" "nps lint"' +
       ' -n babel,tsc,eslint -c green,magenta,yellow',
     preversion: series(
       'shx echo "Recommended version bump is:"',

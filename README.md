@@ -22,7 +22,7 @@ It can also be used as an executable, allowing you to run a command after a prev
 
 [`npm install exits`](https://www.npmjs.com/package/exits)
 
-If global CLI usage is intended, you can either globally install with npm (recommended if you already have *Node.js* installed: `npm install -g exits`) or [download the latest executable for your system.](https://github.com/rafamel/exits/releases)
+If global CLI usage is intended, you can install globally by running: `npm install -g exits`.
 
 ## CLI
 
