@@ -1,4 +1,4 @@
-import logger from '~/logger';
+import logger from '~/utils/logger';
 import { IAttach, TSignal } from '~/types';
 import handler from '~/utils/handler';
 import { SIGNALS } from '~/constants';

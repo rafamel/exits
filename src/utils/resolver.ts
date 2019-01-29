@@ -1,4 +1,4 @@
-import logger from '~/logger';
+import logger from '~/utils/logger';
 import store from '~/store';
 import { TSignal } from '~/types';
 

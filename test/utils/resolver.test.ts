@@ -1,6 +1,6 @@
 import resolver from '~/utils/resolver';
 import store from '~/store';
-import logger from '~/logger';
+import logger from '~/utils/logger';
 
 logger.setLevel('silent');
 

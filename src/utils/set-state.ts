@@ -1,5 +1,5 @@
 import { IState } from '~/types';
-import logger from '~/logger';
+import logger from '~/utils/logger';
 import store from '~/store';
 import { parallel } from 'promist';
 

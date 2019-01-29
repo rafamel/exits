@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { spawn as _spawn, SpawnOptions, ChildProcess } from 'child_process';
-import logger from '~/logger';
+import logger from '~/utils/logger';
 import { TSignal } from '~/types';
 import { SIGNALS } from '~/constants';
 import uuid from 'uuid/v4';

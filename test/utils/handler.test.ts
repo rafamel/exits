@@ -6,7 +6,7 @@ import _killWait from '~/utils/kill-wait';
 import _playSignal from '~/utils/play-signal';
 import { unattach as _unattach } from '~/methods/attach';
 import _setState from '~/utils/set-state';
-import logger from '~/logger';
+import logger from '~/utils/logger';
 
 logger.setLevel('silent');
 jest.mock('~/methods/attach');

@@ -1,5 +1,5 @@
 import { deferred, timeout } from 'promist';
-import logger from '~/logger';
+import logger from '~/utils/logger';
 import store from '~/store';
 import { IProcess } from '~/types';
 

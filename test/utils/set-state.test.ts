@@ -1,7 +1,7 @@
 import reset, { cloned } from '../reset-store';
 import store from '~/store';
 import setState from '~/utils/set-state';
-import logger from '~/logger';
+import logger from '~/utils/logger';
 import { TTriggered } from '~/types';
 
 logger.setLevel('silent');

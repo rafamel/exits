@@ -10,7 +10,7 @@ import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { options, attach, add, spawn } from '~/index';
 import Ajv from 'ajv';
 import draft06 from 'ajv/lib/refs/json-schema-draft-06.json';
-import logger from '~/logger';
+import logger from '~/utils/logger';
 
 const schema = {
   type: 'object',

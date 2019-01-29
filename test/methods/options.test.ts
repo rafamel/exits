@@ -1,7 +1,7 @@
 import reset, { cloned } from '../reset-store';
 import store from '~/store';
 import { options } from '~/index';
-import logger from '~/logger';
+import logger from '~/utils/logger';
 import { IOptions } from '~/types';
 
 test(`preserves options`, () => {

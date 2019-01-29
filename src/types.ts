@@ -1,4 +1,7 @@
 import { SpawnOptions, ChildProcess } from 'child_process';
+import { LogLevelDesc } from 'loglevel';
+
+export type TLogger = LogLevelDesc;
 
 export interface IOptions {
   logger: TLogger;
@@ -15,8 +18,6 @@ export interface ISpawned {
   sigterm?: null | number;
   sigkill?: null | number;
 }
-
-export type TLogger = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'silent';
 
 export type TSignal = 'SIGINT' | 'SIGHUP' | 'SIGQUIT' | 'SIGTERM';
 
