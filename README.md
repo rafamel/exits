@@ -62,7 +62,7 @@ Options:
 * [`state()`](#state-object) returns an *object* with the current `exits` state.
 * [`on()`](#onevent-string-cb-function-void) subscribes to state changes.
 * [`control()`](#controlfn-generator-promiseany`) controls *async* execution flow in order to stop parallel execution on triggered termination events.
-* [`exit()`](#exitcode-number-Promisevoid) explicitly terminates execution while still waiting for `exits` tasks to finish.
+* [`terminate()`](#terminatetype-string-arg-string--error--number-promisevoid) explicitly terminates execution while still waiting for `exits` tasks to finish.
 * [`spawn()`](#spawncmd-string-args-string-opts-object-object) safely handles execution of child processes.
 
 ### Basic usage
@@ -282,14 +282,30 @@ const myAsyncFunction = control(function*(n = 10) {
 myAsyncFunction(10).then(console.log) // 100
 ```
 
-### `exit(code: number): Promise<void>`
+### `terminate(type: string, arg: string | Error | number): Promise<void>`
 
-[As any explicit call to `process.exit()` will terminate the process without running `exits` tasks,](#forceful-process-termination) `exit()` is provided as a replacement for explicit exit calls. It will run all tasks associated with the `exit` event and call the [resolver *function*.](#resolver-function) with the exit `code` passed.
+[As any explicit call to `process.exit()` will terminate the process without running `exits` tasks,](#forceful-process-termination) `terminate()` is provided as a replacement for explicit exit calls.
+
+It will manually produce termination any other reason (`'signal'`, `'exception'`, `'rejection'`, or `'exit'`), run all tasks associated with that event as if it was originated otherwise, and call the [resolver *function*.](#resolver-function) with the `type` and `arg` passed.
+
+* `type`: *string,* any of `'exit'`, `'signal'`, `'exception'`, or `'rejection'`.
+* `arg`:
+  * if `type` is `'signal'`, it should be the signal *string,*
+  * if `type` is `'exception'` or `'rejection'`, it should be an *Error,*
+  * if `type` is `'exit'`, it should the the exit code *number.*
 
 ```javascript
-import { exit } from 'exits';
+import { terminate } from 'exits';
 
-exit(1);
+// This will run all tasks bound to exit and call the resolver
+// with type 'exit' and arg 1. The default resolver will
+// then exit the process with code 1.
+terminate('exit', 1);
+
+// This will run all tasks bound to exception and call the resolver
+// with type 'error' and the error as arg. The default resolver will
+// then throw the error, which will cause the process to terminate.
+terminate('exception', Error('some error'));
 ```
 
 ### `spawn(cmd: string, args?: string[], opts?: object): object`
@@ -363,26 +379,39 @@ options({
   resolver(type, arg) {
     switch (type) {
       case 'signal':
-        process.kill(process.pid, arg);
-        break;
+        return process.kill(process.pid, arg);
       case 'exit':
-        process.exit(Number(arg));
+        return process.exit(Number(arg));
       case 'exception':
       case 'rejection':
-        setImmediate(() => {
+        return setImmediate(() => {
           throw arg;
         });
-        break;
       default:
-        break;
+        return;
     }
+  }
+});
+```
+
+The default resolver is also exported, so you could call it inside a function like so:
+
+```javascript
+import { resolver, options } from 'exits';
+
+options({
+  resolver(type, arg) {
+    if (type === 'rejection') {
+      // do something
+    }
+    return resolver(type, arg);
   }
 });
 ```
 
 ### Forceful process termination
 
-There are two instances in which `exits` tasks won't run: when calling `process.exit()` explicitly, and when a `SIGKILL` signal is received.
+There are two instances in which `exits` tasks won't run: when calling `process.exit()` explicitly, and when a `SIGKILL` signal is received. See [`terminate()`.](#terminatetype-string-arg-string--error--number-promisevoid)
 
 ```javascript
 // This will immediately exit the process with a 0 code
