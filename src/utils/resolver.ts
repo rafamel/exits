@@ -2,7 +2,12 @@ import logger from '~/utils/logger';
 import store from '~/store';
 import { TSignal } from '~/types';
 
-export default function resolver(
+export default resolver;
+
+function resolver(type: 'signal', arg: TSignal): void;
+function resolver(type: 'exception' | 'rejection', arg: Error): void;
+function resolver(type: 'exit', arg: number): void;
+function resolver(
   type: 'signal' | 'exception' | 'rejection' | 'exit',
   arg: TSignal | Error | number
 ): void {
