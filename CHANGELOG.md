@@ -1,3 +1,12 @@
+## [0.2.1](https://github.com/rafamel/exits/compare/v0.2.0...v0.2.1) (2019-01-29)
+
+
+### Bug Fixes
+
+* **resolver:** includes type agnostic overload to allow for options.resolver to resolver calls ([4643959](https://github.com/rafamel/exits/commit/4643959))
+
+
+
 # [0.2.0](https://github.com/rafamel/exits/compare/v0.1.4...v0.2.0) (2019-01-29)
 
 
