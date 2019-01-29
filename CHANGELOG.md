@@ -1,3 +1,12 @@
+## [0.1.4](https://github.com/rafamel/exits/compare/v0.1.3...v0.1.4) (2019-01-29)
+
+
+### Bug Fixes
+
+* **type declarations:** fixes type declarations broken paths via ttypescript (2) ([2b9a08a](https://github.com/rafamel/exits/commit/2b9a08a))
+
+
+
 ## [0.1.3](https://github.com/rafamel/exits/compare/v0.1.2...v0.1.3) (2019-01-29)
 
 

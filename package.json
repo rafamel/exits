@@ -1,6 +1,6 @@
 {
   "name": "exits",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": "Rafa Mel",
   "description": "Run arbitrary functions & commands asynchronously before process termination, programatically or via CLI",
   "keywords": [
