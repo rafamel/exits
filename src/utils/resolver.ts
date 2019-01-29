@@ -10,6 +10,10 @@ function resolver(type: 'exit', arg: number): void;
 function resolver(
   type: 'signal' | 'exception' | 'rejection' | 'exit',
   arg: TSignal | Error | number
+): void;
+function resolver(
+  type: 'signal' | 'exception' | 'rejection' | 'exit',
+  arg: TSignal | Error | number
 ): void {
   const { process } = store;
   switch (type) {
