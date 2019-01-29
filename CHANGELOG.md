@@ -1,3 +1,19 @@
+# [0.2.0](https://github.com/rafamel/exits/compare/v0.1.4...v0.2.0) (2019-01-29)
+
+
+### Features
+
+* **terminate:** renames exit to terminate (it now works for any type/reason) ([76d48ea](https://github.com/rafamel/exits/commit/76d48ea))
+
+
+### BREAKING CHANGES
+
+* **terminate:** exit() has been renamed to terminate(). it now takes two arguments, the first being
+the termination type, and the second its argument (previously, it only took one: the exit code
+number).
+
+
+
 ## [0.1.4](https://github.com/rafamel/exits/compare/v0.1.3...v0.1.4) (2019-01-29)
 
 
