@@ -24,6 +24,10 @@
     "version": "nps private.version",
     "start": "npm run watch",
     "build": "nps build",
+    "build:prepare": "nps build.prepare",
+    "build:transpile": "nps build.transpile",
+    "build:declarations": "nps build.declarations",
+    "build:bin": "nps build.bin",
     "publish": "nps publish",
     "watch": "nps watch",
     "fix": "nps fix",
@@ -42,7 +46,7 @@
     "clean": "nps clean",
     "nps": "nps",
     "jake": "jake",
-    "commit": "cross-env CZ=1 git-cz"
+    "commit": "cross-env COMMITIZEN=# git-cz"
   },
   "license": "MIT",
   "homepage": "https://github.com/rafamel/exits",
@@ -91,6 +95,7 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-restricted-globals": "^0.2.0",
+    "hjson": "^3.1.2",
     "husky": "1.3.0",
     "jake": "^8.0.19",
     "jest-cli": "^24.0.0",
@@ -115,12 +120,18 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "cross-env COMMIT=1 nps validate"
+      "pre-commit": "cross-env COMMIT=# nps validate"
     }
   },
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
+  },
+  "pkg": {
+    "scripts": [],
+    "assets": [
+      "package.json"
+    ]
   }
 }

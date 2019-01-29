@@ -70,7 +70,8 @@ module.exports = {
         /* ERRORS */
         '@typescript-eslint/interface-name-prefix': [2, 'always'],
         '@typescript-eslint/no-use-before-define': [2, { functions: false }],
-        '@typescript-eslint/array-type': [2, 'array-simple']
+        '@typescript-eslint/array-type': [2, 'array-simple'],
+        '@typescript-eslint/explicit-function-return-type': 2
       }),
       settings: {
         // eslint-import-resolver-typescript
