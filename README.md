@@ -245,20 +245,16 @@ Initial state:
 Subscribes to [`state`](#state-object) changes.
 
 * `event`: *string,* any of:
-  * `'attached'`: `cb` will be called whenever the [`attach()`](#attachopts-object-void) method is called and successfully attaches to one or more new events, receiving an *object* with the current attachments, with keys:
-    * `signal`: *boolean*
-    * `exception`: *boolean*
-    * `rejection`: *boolean*
-    * `exit`: *boolean*
-  * `'triggered'`: `cb` will be called on the first occasion `exits` tasks are called (as the rest are ignored), receiving an *object* as an argument, with keys:
-    * `type`: any of `'signal'`, `'exception'`, `'rejection'`, and `'exit'`.
-    * `arg`: the signal (`'SIGINT'`, `'SIGHUP'`, `'SIGQUIT'`, `'SIGTERM'`), *Error*, or exit code *number*.
+  * `'attached'`: `cb` will be called whenever the [`attach()`](#attachopts-object-void) or [`unattach()`](#unattachopts-object-void) methods are called and successfully attach or unattach from one or more events.
+  * `'triggered'`: `cb` will be called when `exits` tasks are first started.
   * `'done'`: `cb` will be called once all `exits` tasks complete.
+* `cb`: *function,* if *asynchronous,* they will execute in parallel and will be waited for before or after `exits` tasks execute, depending on the nature of the `event`. For convenience, it receives the [`state()` method](#state-object) as an argument in order to recover the updated state if needed.
 
 ```javascript
 import { on } from 'exits';
 
-on('triggered', ({ type, arg }) => {
+on('triggered', (getState) => {
+  const state = getState();
   // do something
 });
 ```
@@ -284,15 +280,15 @@ myAsyncFunction(10).then(console.log) // 100
 
 ### `terminate(type: string, arg: string | Error | number): Promise<void>`
 
-[As any explicit call to `process.exit()` will terminate the process without running `exits` tasks,](#forceful-process-termination) `terminate()` is provided as a replacement for explicit exit calls.
+[As any explicit call to `process.exit()` will terminate the process without running `exits` tasks,](#forceful-process-termination) `terminate()` is provided as a replacement.
 
-It will manually produce termination any other reason (`'signal'`, `'exception'`, `'rejection'`, or `'exit'`), run all tasks associated with that event as if it was originated otherwise, and call the [resolver *function*.](#resolver-function) with the `type` and `arg` passed.
+It will produce termination by that or any other event (`'signal'`, `'exception'`, `'rejection'`, or `'exit'`), run all tasks associated with it, and call the [resolver *function*](#resolver-function) with the `type` and `arg` passed. Hence, `exits` will behave just as if the event hadn't been manually raised.
 
 * `type`: *string,* any of `'exit'`, `'signal'`, `'exception'`, or `'rejection'`.
 * `arg`:
   * if `type` is `'signal'`, it should be the signal *string,*
   * if `type` is `'exception'` or `'rejection'`, it should be an *Error,*
-  * if `type` is `'exit'`, it should the the exit code *number.*
+  * if `type` is `'exit'`, it should be the exit code *number.*
 
 ```javascript
 import { terminate } from 'exits';
@@ -368,7 +364,7 @@ options({
 
 The resolver function gets called whenever `exits` tasks finalize in order to terminate the current process in a way that is coherent with the first event that caused the tasks to initialize. Hence, it takes two arguments: `type` and `arg`, in the same fashion as the [`add()` `cb`.](#addcb-function-priority-number--null-opts-object-function)
 
-You can switch this function globally by passing a resolver key to [`options()`.](#optionsopts-object-void)
+You can switch this function globally by passing a `resolver` key to the *object* taken by [`options()`.](#optionsopts-object-void)
 
 **Simplified default implementation:**
 
