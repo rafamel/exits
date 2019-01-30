@@ -21,7 +21,7 @@ async function handler(
     if (type === 'signal' && !playSignal(arg)) return;
 
     // Update state
-    setState({ triggered: { type, arg } });
+    await setState({ triggered: { type, arg } });
 
     // Wait for processes to close
     await killWait();
@@ -45,7 +45,7 @@ async function handler(
   }
 
   // Update state
-  setState({ done: true });
+  await setState({ done: true });
 
   // Unattach self
   unattach();

@@ -2,22 +2,31 @@ import { IState } from '~/types';
 import logger from '~/utils/logger';
 import store from '~/store';
 import { parallel } from 'promist';
+import getState from '~/methods/state';
 
+let promise = Promise.resolve();
 export default function setState(update: Partial<IState>): Promise<void> {
   const { state, subscribers } = store;
-  return parallel.each(Object.entries(update), async ([key, value]) => {
-    // @ts-ignore
-    state[key] = value;
-    if (subscribers.hasOwnProperty(key)) {
-      // @ts-ignore
-      await parallel.each(subscribers[key], async (fn) => {
-        try {
+  // @ts-ignore
+  Object.entries(update).forEach(([key, value]) => (state[key] = value));
+  // This accumulated promise allows us to keep attach() and unattach() synchronous
+  promise = promise.then(() => {
+    return parallel.each(Object.keys(update), async (key) => {
+      if (subscribers.hasOwnProperty(key)) {
+        logger.debug('Running ' + key + ' event hooks');
+        await parallel.each(
           // @ts-ignore
-          await fn(value);
-        } catch (e) {
-          logger.error(e);
-        }
-      });
-    }
+          subscribers[key],
+          async (fn: (getState: () => IState) => Promise<any> | any) => {
+            try {
+              await fn(getState);
+            } catch (e) {
+              logger.error(e);
+            }
+          }
+        );
+      }
+    });
   });
+  return promise;
 }

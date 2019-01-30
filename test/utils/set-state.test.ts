@@ -3,6 +3,7 @@ import store from '~/store';
 import setState from '~/utils/set-state';
 import logger from '~/utils/logger';
 import { TTriggered } from '~/types';
+import { wait } from 'promist';
 
 logger.setLevel('silent');
 
@@ -43,6 +44,23 @@ test(`updates state keys`, async () => {
     triggered,
     done: true
   });
+});
+
+test(`accumulates promise`, async () => {
+  expect.assertions(1);
+  reset();
+  store.subscribers.attached = [() => wait(750)];
+  const update = {
+    signal: true,
+    exception: false,
+    rejection: false,
+    exit: true
+  };
+  const start = Date.now();
+  setState({ attached: update });
+  await setState({ done: true });
+
+  expect(Date.now() - start).toBeGreaterThan(500);
 });
 
 test(`doesn't reject for non existent prop`, async () => {

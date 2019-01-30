@@ -57,9 +57,9 @@ export interface IStore {
     ): Promise<void> | void;
   }>;
   subscribers: {
-    attached: Array<(attached: IAttach) => any>;
-    triggered: Array<(triggered: TTriggered) => any>;
-    done: Array<(done: boolean) => any>;
+    attached: Array<(attached: IAttach) => Promise<any> | any>;
+    triggered: Array<(triggered: TTriggered) => Promise<any> | any>;
+    done: Array<(done: boolean) => Promise<any> | any>;
   };
   options: IOptions;
   process: NodeJS.Process;
