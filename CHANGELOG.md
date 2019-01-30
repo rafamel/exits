@@ -1,3 +1,18 @@
+# [0.3.0](https://github.com/rafamel/exits/compare/v0.2.1...v0.3.0) (2019-01-30)
+
+
+### Features
+
+* **on:** on callbacks receive state() & are waited for ([da2ef89](https://github.com/rafamel/exits/commit/da2ef89))
+
+
+### BREAKING CHANGES
+
+* **on:** on() now receives state() for convenience to recover the updated state if needed
+instead of different arguments depending on event.
+
+
+
 ## [0.2.1](https://github.com/rafamel/exits/compare/v0.2.0...v0.2.1) (2019-01-29)
 
 
