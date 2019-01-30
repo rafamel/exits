@@ -9,7 +9,7 @@ export interface IOptions {
   resolver(
     type: 'signal' | 'exception' | 'rejection' | 'exit',
     arg: TSignal | Error | number
-  ): void;
+  ): any;
 }
 
 export interface ISpawned {
@@ -57,9 +57,9 @@ export interface IStore {
     ): Promise<void> | void;
   }>;
   subscribers: {
-    attached: Array<(attached: IAttach) => void>;
-    triggered: Array<(triggered: TTriggered) => void>;
-    done: Array<(done: boolean) => void>;
+    attached: Array<(attached: IAttach) => any>;
+    triggered: Array<(triggered: TTriggered) => any>;
+    done: Array<(done: boolean) => any>;
   };
   options: IOptions;
   process: NodeJS.Process;

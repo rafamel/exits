@@ -6,7 +6,7 @@ export default function add(
     type: 'signal' | 'exception' | 'rejection' | 'exit',
     arg: TSignal | Error | number,
     context: any
-  ) => Promise<void> | void,
+  ) => Promise<any> | any,
   priority?: number | null,
   {
     signal = true,
