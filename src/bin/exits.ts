@@ -56,6 +56,7 @@ const schema = {
       '--log <level>',
       `\n\tLogging level, one of trace, debug, info, warn, error, or silent.\n\tDefault: ${DEFAULT_LOG_LEVEL}\n\tExample: --logger info`
     )
+    .option('--fail', `\n\tAlso exit with code 1 if the after command fails.`)
     .parse(argv);
 
   if (!cmds.length) return program.help();
@@ -96,8 +97,13 @@ const schema = {
 
     logger.info('\n' + chalk.green('Running last command: ') + last[0]);
 
-    await spawn(last[0], last.slice(1), {
-      stdio: stdio.length === 1 ? stdio[0] : stdio
-    }).promise;
+    try {
+      await spawn(last[0], last.slice(1), {
+        stdio: stdio.length === 1 ? stdio[0] : stdio
+      }).promise;
+    } catch (e) {
+      if (program.fail) process.exit(1);
+      else throw e;
+    }
   }, 0);
 })();
