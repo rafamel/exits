@@ -5,8 +5,8 @@
 [![Coverage](https://img.shields.io/coveralls/rafamel/exits.svg)](https://coveralls.io/github/rafamel/exits)
 [![Dependencies](https://img.shields.io/david/rafamel/exits.svg)](https://david-dm.org/rafamel/exits)
 [![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/exits.svg)](https://snyk.io/test/npm/exits)
-[![License](https://img.shields.io/github/license/rafamel/exits.svg)](https://github.com/rafamel/exits/blob/master/LICENSE)
 [![Types](https://img.shields.io/npm/types/exits.svg)](https://www.npmjs.com/package/exits)
+[![License](https://img.shields.io/github/license/rafamel/exits.svg)](https://github.com/rafamel/exits/blob/master/LICENSE)
 
 <!-- markdownlint-disable MD036 -->
 **Run arbitrary functions & commands asynchronously before process termination, programatically or via CLI.**
@@ -28,12 +28,12 @@ If global CLI usage is intended, you can install globally by running: `npm insta
 
 <!-- markdownlint-disable MD040 MD031 -->
 ```
+Usage: exits [options] "mainCmd ...args" "afterCmd ...args"
+
 Run a command after a main command terminates.
 
-Usage: exits [options] <mainCmd> <...mainArgs> -- <afterCmd> <...afterArgs>
-
 Options:
-  --stdio <stdio>
+  --stdio <stdio>  
         stdio options to spawn children processes with.
         Can be inherit, pipe, ignore, or a comma separated combination for stdin,stdout,stderr.
         Default: inherit.
@@ -46,7 +46,9 @@ Options:
   --log <level>
         Logging level, one of trace, debug, info, warn, error, or silent.
         Default: warn
-        Example: --logger info
+        Example: --log info
+  --fail
+        Also exit with code 1 if the after command fails.
   -h, --help       output usage information
   -V, --version    output the version number
 ```
