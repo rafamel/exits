@@ -1,12 +1,12 @@
 # exits
 
 [![Version](https://img.shields.io/npm/v/exits.svg)](https://www.npmjs.com/package/exits)
-[![Types](https://img.shields.io/npm/types/exits.svg)](https://www.npmjs.com/package/exits)
 [![Build Status](https://img.shields.io/travis/rafamel/exits.svg)](https://travis-ci.org/rafamel/exits)
 [![Coverage](https://img.shields.io/coveralls/rafamel/exits.svg)](https://coveralls.io/github/rafamel/exits)
 [![Dependencies](https://img.shields.io/david/rafamel/exits.svg)](https://david-dm.org/rafamel/exits)
 [![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/exits.svg)](https://snyk.io/test/npm/exits)
 [![License](https://img.shields.io/github/license/rafamel/exits.svg)](https://github.com/rafamel/exits/blob/master/LICENSE)
+[![Types](https://img.shields.io/npm/types/exits.svg)](https://www.npmjs.com/package/exits)
 
 <!-- markdownlint-disable MD036 -->
 **Run arbitrary functions & commands asynchronously before process termination, programatically or via CLI.**
@@ -61,7 +61,7 @@ Options:
 * [`options()`](#optionsopts-object-void) sets `exits` options.
 * [`state()`](#state-object) returns an *object* with the current `exits` state.
 * [`on()`](#onevent-string-cb-function-void) subscribes to state changes.
-* [`control()`](#controlfn-generator-promiseany`) controls *async* execution flow in order to stop parallel execution on triggered termination events.
+* [`control()`](#controlfn-generator-promiseany) controls *async* execution flow in order to stop parallel execution on triggered termination events.
 * [`terminate()`](#terminatetype-string-arg-string--error--number-promisevoid) explicitly terminates execution while still waiting for `exits` tasks to finish.
 * [`spawn()`](#spawncmd-string-args-string-opts-object-object) safely handles execution of child processes.
 

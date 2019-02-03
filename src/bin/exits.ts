@@ -5,12 +5,12 @@ import fs from 'fs';
 import program from 'commander';
 import chalk from 'chalk';
 import pify from 'pify';
-import args from './cmd-args';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { options, attach, add, spawn } from '~/index';
 import Ajv from 'ajv';
 import draft06 from 'ajv/lib/refs/json-schema-draft-06.json';
 import logger from '~/utils/logger';
+import cmdArgs from './cmd-args';
 
 const schema = {
   type: 'object',
@@ -38,11 +38,12 @@ const schema = {
   const ajv = new Ajv();
   ajv.addMetaSchema(draft06);
 
+  const [argv, cmds] = cmdArgs(process.argv, { first: true });
   program
     .version(pkg.version)
     .description('Run a command after a main command terminates.')
     .name('exits')
-    .usage('[options] <mainCmd> <...mainArgs> -- <afterCmd> <...afterArgs>')
+    .usage('[options] -- <mainCmd> <...mainArgs> -- <afterCmd> <...afterArgs>')
     .option(
       '--stdio <stdio>',
       `\n\tstdio options to spawn children processes with.\n\tCan be inherit, pipe, ignore, or a comma separated combination for stdin,stdout,stderr.\n\tDefault: inherit.\n\tExample: --stdio pipe,inherit,inherit`
@@ -55,10 +56,11 @@ const schema = {
       '--log <level>',
       `\n\tLogging level, one of trace, debug, info, warn, error, or silent.\n\tDefault: ${DEFAULT_LOG_LEVEL}\n\tExample: --logger info`
     )
-    .parse(args.set());
+    .parse(argv);
 
-  const [first, last] = args.get(program.args);
-  if (first.length < 1) return program.help();
+  if (!cmds.length) return program.help();
+  const [first, last] = cmdArgs(cmds, { first: false });
+  if (!first.length) return program.help();
 
   const stdio = program.stdio ? program.stdio.split(',') : ['inherit'];
   const at = program.at
