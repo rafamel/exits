@@ -31,7 +31,13 @@ const schema = {
   }
 };
 
-(async () => {
+main();
+async function main(): Promise<void> {
+  const failedHelp = (): void => {
+    program.outputHelp();
+    process.exit(1);
+  };
+
   const pkg = JSON.parse(
     await pify(fs.readFile)(path.join(__dirname, '../package.json'))
   );
@@ -53,18 +59,16 @@ const schema = {
     )
     .option(
       '--log <level>',
-      `\n\tLogging level, one of trace, debug, info, warn, error, or silent.\n\tDefault: ${DEFAULT_LOG_LEVEL}\n\tExample: --logger info`
+      `\n\tLogging level, one of trace, debug, info, warn, error, or silent.\n\tDefault: ${DEFAULT_LOG_LEVEL}\n\tExample: --log info`
     )
     .option('--fail', `\n\tAlso exit with code 1 if the after command fails.`)
     .parse(process.argv);
 
-  if (program.args.length < 1 || program.args.length > 2) {
-    return program.help();
-  }
+  if (program.args.length < 1 || program.args.length > 2) failedHelp();
   const first: string[] = toArgv(program.args[0]);
   const last: string[] = program.args[1] ? toArgv(program.args[1]) : [];
 
-  if (!first.length) return program.help();
+  if (!first.length) return failedHelp();
 
   const stdio = program.stdio ? program.stdio.split(',') : ['inherit'];
   const at = program.at
@@ -73,7 +77,7 @@ const schema = {
   const log = program.log || DEFAULT_LOG_LEVEL;
 
   const valid = ajv.validate(schema, { stdio, at, log });
-  if (!valid) return program.help();
+  if (!valid) return failedHelp();
 
   options({ logger: log, spawned: { signals: 'none', wait: 'all' } });
   attach();
@@ -109,4 +113,4 @@ const schema = {
       else throw e;
     }
   }, 0);
-})();
+}
