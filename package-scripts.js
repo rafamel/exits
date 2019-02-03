@@ -1,4 +1,3 @@
-const pkg = require('./package.json');
 const path = require('path');
 const dir = (file) => path.join(CONFIG_DIR, file);
 const series = (...x) => `(${x.map((x) => x || 'shx echo').join(') && (')})`;
@@ -32,9 +31,10 @@ module.exports = scripts({
       `jake fixpackage["${__dirname}","${OUT_DIR}"]`
     ),
     transpile: `babel src --out-dir ${OUT_DIR} --extensions ${DOT_EXT} --source-maps inline`,
-    declaration: TS
-      ? `ttsc --project ttsconfig.json --outDir ${OUT_DIR}`
-      : 'shx echo'
+    declaration: series(
+      TS && `ttsc --project ttsconfig.json --outDir ${OUT_DIR}`,
+      `shx echo "${TS ? 'Declaration files built' : ''}"`
+    )
   },
   publish: `cd ${OUT_DIR} && npm publish`,
   watch: series(
@@ -73,7 +73,7 @@ module.exports = scripts({
     TS && `jake run:zero["shx rm -r ${DOCS_DIR}"]`,
     TS && `typedoc --out ${DOCS_DIR} ./src`
   ),
-  changelog: 'conventional-changelog -p angular -i CHANGELOG.md -s',
+  changelog: 'conventional-changelog -p angular -i CHANGELOG.md -s -r 0',
   update: series('npm update --save/save-dev', 'npm outdated'),
   clean: series(
     `jake run:zero["shx rm -r ${OUT_DIR} ${DOCS_DIR} coverage CHANGELOG.md"]`,
