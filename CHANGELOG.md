@@ -1,3 +1,30 @@
+# [0.4.0](https://github.com/rafamel/exits/compare/v0.3.0...v0.4.0) (2019-02-03)
+
+
+### Bug Fixes
+
+* **bin:** fixes arguments parsing ([6e6d15e](https://github.com/rafamel/exits/commit/6e6d15e))
+
+
+### Code Refactoring
+
+* **bin:** changes bin api, commands are now passed within quotes instead of after -- ([427f697](https://github.com/rafamel/exits/commit/427f697))
+
+
+### Features
+
+* **bin:** adds --fail flag to exit with code 1 when seconds command fails ([9d0bec1](https://github.com/rafamel/exits/commit/9d0bec1))
+* **bin:** exits with code 1 when it has failed to parse arguments and help is shown ([d5aee99](https://github.com/rafamel/exits/commit/d5aee99))
+
+
+### BREAKING CHANGES
+
+* **bin:** bin exits with code 1 at arguments parsing failure
+* **bin:** bin takes commands to execute as a single quoted argument
+* **bin:** mainCmd on bin must now follow "--"
+
+
+
 # [0.3.0](https://github.com/rafamel/exits/compare/v0.2.1...v0.3.0) (2019-01-30)
 
 
