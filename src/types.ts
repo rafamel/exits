@@ -1,7 +1,9 @@
 import { SpawnOptions, ChildProcess } from 'child_process';
-import { LogLevelDesc } from 'loglevel';
 
-export type TLogger = LogLevelDesc;
+/**
+ * A logging level value.
+ */
+export type TLogger = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'silent';
 
 export interface IOptions {
   logger: TLogger;

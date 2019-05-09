@@ -69,6 +69,7 @@
     "@pika/pack": "^0.3.7",
     "@types/jest": "^24.0.12",
     "@types/lodash.clonedeep": "^4.5.4",
+    "@types/loglevel": "^1.5.3",
     "@types/pify": "^3.0.2",
     "@types/string-argv": "^0.1.0",
     "@types/uuid": "^3.4.4",
@@ -107,7 +108,6 @@
     "typescript": "3.4.5"
   },
   "dependencies": {
-    "@types/loglevel": "^1.5.3",
     "ajv": "^6.8.1",
     "chalk": "^2.4.2",
     "commander": "^2.19.0",
