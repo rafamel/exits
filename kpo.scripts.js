@@ -11,7 +11,7 @@ verify('nodeOnly', 'typescript', 'ext.js', 'ext.ts', 'paths.docs', 'release.buil
 const vars = {
   node: !!project.nodeOnly,
   semantic: !!process.env.SEMANTIC,
-  commitizen: !!process.env.COMMITIZEN,
+  commit: !!process.env.COMMITIZEN || !!process.env.SEMANTIC,
   ext: extensions(),
   dotExt: '.' + extensions().replace(/,/g, ',.')
 };
@@ -101,7 +101,7 @@ module.exports.scripts = {
   },
   /* Hooks */
   $precommit: [
-    !vars.commitizen && Error(`Commit by running 'kpo commit'`),
+    !vars.commit && Error(`Commit by running 'kpo commit'`),
     kpo`validate`
   ],
   prepublishOnly: Error(`Run 'kpo release'`),
