@@ -4,6 +4,7 @@ import { stripIndent as indent } from 'common-tags';
 import arg from 'arg';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import chalk from 'chalk';
+import nrp from 'npm-run-path';
 import logger from '~/utils/logger';
 import logError from './log-error';
 import { TLogger, TSignal } from '~/types';
@@ -80,11 +81,11 @@ export default async function main(argv: string[]): Promise<void> {
     fail: cmd['--fail']
   };
 
-  // TODO: pass env variables + npm-run-path
   const spawn = (cmd: string): Promise<TSignal | null> => {
     return _spawn(cmd, [], {
       shell: true,
-      stdio: options.stdio.length === 1 ? options.stdio[0] : options.stdio
+      stdio: options.stdio.length === 1 ? options.stdio[0] : options.stdio,
+      env: nrp.env()
     }).promise;
   };
 
