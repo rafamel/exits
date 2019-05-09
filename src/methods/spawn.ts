@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import { spawn as _spawn, SpawnOptions, ChildProcess } from 'child_process';
 import logger from '~/utils/logger';
 import { TSignal } from '~/types';
@@ -11,9 +10,7 @@ export default function spawn(
   args: string[] = [],
   opts: SpawnOptions = {}
 ): { ps: ChildProcess; promise: Promise<TSignal | null> } {
-  logger.debug(
-    chalk.green('\nRunning: ') + [cmd].concat(args).join(' ') + '\n'
-  );
+  logger.debug('Running: ' + [cmd].concat(args).join(' '));
 
   const id = uuid();
   const ps = _spawn(cmd, args, opts);
