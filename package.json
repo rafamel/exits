@@ -67,11 +67,11 @@
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-typescript": "^7.3.3",
     "@pika/pack": "^0.3.7",
+    "@types/common-tags": "^1.8.0",
     "@types/jest": "^24.0.12",
     "@types/lodash.clonedeep": "^4.5.4",
     "@types/loglevel": "^1.5.3",
     "@types/pify": "^3.0.2",
-    "@types/string-argv": "^0.1.0",
     "@types/uuid": "^3.4.4",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
@@ -108,14 +108,15 @@
     "typescript": "3.4.5"
   },
   "dependencies": {
-    "ajv": "^6.8.1",
+    "arg": "^4.1.0",
     "chalk": "^2.4.2",
-    "commander": "^2.19.0",
+    "cli-belt": "^0.3.0",
+    "common-tags": "^1.8.0",
+    "errorish": "^0.3.0",
     "lodash.clonedeep": "^4.5.0",
     "loglevel": "^1.6.1",
     "pify": "^4.0.1",
     "promist": "^0.5.2",
-    "string-argv": "^0.1.1",
     "uuid": "^3.3.2"
   },
   "husky": {

@@ -13,7 +13,8 @@ module.exports = {
   modulePathIgnorePatterns: [
     '<rootDir>/pkg',
     '<rootDir>/src/@types',
-    '<rootDir>/src/.*/__mocks__'
+    '<rootDir>/src/.*/__mocks__',
+    '<rootDir>/src/bin/exits.ts'
   ],
   moduleFileExtensions: EXT_ARR.concat(['json']),
   testPathIgnorePatterns: ['/node_modules/']
