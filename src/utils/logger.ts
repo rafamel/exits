@@ -5,7 +5,6 @@ import { TLogger } from '~/types';
 
 const APP_NAME = 'exits';
 const logger = loglevel.getLogger(`_${APP_NAME}_logger_`);
-logger.setDefaultLevel(DEFAULT_LOG_LEVEL);
 
 function setLevel(level: TLogger): void {
   logger.setLevel(level);
@@ -37,5 +36,8 @@ logger.methodFactory = (...args) => (...inner: any[]) => {
     ...inner.slice(1)
   );
 };
+
+// Must be set -at least once- after overwriting methodFactory
+logger.setDefaultLevel(DEFAULT_LOG_LEVEL);
 
 export { logger as default, setLevel };
