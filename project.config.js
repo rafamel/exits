@@ -1,17 +1,24 @@
-module.exports = {
-  // Whether to use TypeScript. Boolean.
-  TYPESCRIPT: true,
-  // Output build directory. String.
-  OUT_DIR: 'build',
-  // Output directory for docs. String.
-  DOCS_DIR: 'docs',
-  // Path to most tooling configuration files. String.
-  CONFIG_DIR: __dirname,
-  // Extensions for JS and TS files. Comma separated string (no dots).
-  EXT_JS: 'js,mjs,jsx',
-  EXT_TS: 'ts,tsx',
-  // Build project on version bump. Boolean.
-  RELEASE_BUILD: true,
-  // Generate docs from TS on version bump. Boolean.
-  RELEASE_DOCS: false
-};
+const path = require('path');
+const { default: slim } = require('slimconf');
+
+module.exports = slim({
+  // transpile straight up with babel.
+  nodeOnly: true,
+  typescript: true,
+  // Extensions allowed for each file type, as a comma separated string
+  ext: {
+    js: 'js,cjs,mjs,jsx',
+    ts: 'ts,tsx'
+  },
+  // Paths used on build
+  paths: {
+    root: __dirname,
+    docs: path.join(__dirname, 'docs')
+  },
+  release: {
+    // Build project on version bump. Boolean.
+    build: true,
+    // Generate docs from TS on version bump. Boolean.
+    docs: false
+  }
+});
