@@ -17,7 +17,7 @@ const mocks: { [key: string]: jest.Mock } = {
 beforeEach(() => Object.values(mocks).forEach((mock) => mock.mockClear()));
 
 test(`has default level`, () => {
-  expect(logger.getLevel()).toBe(3);
+  expect(logger.getLevel()).toBe(2);
 });
 test(`sets level`, () => {
   expect(setLevel('debug')).toBeUndefined();
