@@ -30,29 +30,29 @@ If global CLI usage is intended, you can install globally by running: `npm insta
 
 <!-- markdownlint-disable MD040 MD031 -->
 ```
-Usage: exits [options] "mainCmd ...args" "afterCmd ...args"
-
 Run a command after a main command terminates.
 
+Usage:
+  $ exits [options] [mainCmd] [lastCmd]
+
 Options:
-  --stdio <stdio>  
-        stdio options to spawn children processes with.
-        Can be inherit, pipe, ignore, or a comma separated combination for stdin,stdout,stderr.
-        Default: inherit.
-        Example: --stdio pipe,inherit,inherit
-  --at <at>
-        In which termination cases of the main process should the after command run.
-        Can be signal, error, success, or a comma separated combination of those.
-        Default: signal,error,success.
-        Example: --at signal,error
-  --log <level>
-        Logging level, one of trace, debug, info, warn, error, or silent.
-        Default: warn
-        Example: --log info
-  --fail
-        Also exit with code 1 if the after command fails.
-  -h, --help       output usage information
-  -V, --version    output the version number
+  --stdio <value>     stdio options to spawn children processes with.
+      Can be inherit, pipe, ignore, or a comma separated combination for stdin,stdout,stderr.
+      Default: inherit.
+      Example: --stdio pipe,inherit,inherit
+  --at <value>        Termination cases of the main process in which the last command will run.
+      Can be signal, error, success, or a comma separated combination of those.
+      Default: signal,error,success.
+      Example: --at signal,error
+  --log <level>       Logging level, one of trace, debug, info, warn, error, or silent.
+      Default: ${DEFAULT_LOG_LEVEL}.
+      Example: --log info
+  --fail              Exits with code 1 if the last command fails.
+  -h, --help          Show help
+  -v, --version       Show version number
+
+Examples:
+  $ exits "echo foo" "echo bar"
 ```
 <!-- markdownlint-enable MD040 MD031 -->
 
@@ -192,7 +192,7 @@ clear();
 Sets `exits` global options.
 
 * `opts`: *object,* with optional properties:
-  * `logger`: *string,* any of `'trace'`, `'debug'`, `'info'`, `'warn'`, `'error'`, `'silent'`. Sets `exits` logging level. Default: `'warn'`.
+  * `logger`: *string,* any of `'trace'`, `'debug'`, `'info'`, `'warn'`, `'error'`, `'silent'`. Sets `exits` logging level. Default: `'info'`.
   * `spawned`: *object,* determines `exits` behavior in relation to spawned commands. See [`spawn()`.](#spawncmd-string-args-string-opts-object-object)
   * `resolver`: a [resolver *function*.](#resolver-function)
 
