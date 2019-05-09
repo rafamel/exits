@@ -1,4 +1,4 @@
-import { deferred, timeout } from 'promist';
+import { deferred, wait } from 'promist';
 import logger from '~/utils/logger';
 import store from '~/store';
 import { IProcess } from '~/types';
@@ -28,19 +28,17 @@ export default async function killWait(): Promise<void> {
 
   logger.debug('Waiting for proceses to close');
 
-  const p = deferred();
+  const promise = deferred();
   filtered.forEach(({ ps }) => {
     ps.on('close', () => {
       filtered = filtered.filter((x) => x.ps !== ps);
-      if (!filtered.length) p.resolve();
+      if (!filtered.length) promise.resolve();
     });
   });
 
   if (spawned.sigterm !== null) {
-    await timeout(
-      Number(spawned.sigterm) > 0 ? Number(spawned.sigterm) : 0,
-      Error()
-    )(p.then((x) => x)).catch(() => {});
+    const sigterm = Number(spawned.sigterm) > 0 ? Number(spawned.sigterm) : 0;
+    await Promise.race([promise, wait(sigterm)]);
     if (!filtered.length) return;
 
     logger.debug('Seding SIGTERM signal');
@@ -48,15 +46,13 @@ export default async function killWait(): Promise<void> {
   }
 
   if (spawned.sigkill !== null) {
-    await timeout(
-      Number(spawned.sigkill) > 0 ? Number(spawned.sigkill) : 0,
-      Error()
-    )(p.then((x) => x)).catch(() => {});
+    const sigkill = Number(spawned.sigkill) > 0 ? Number(spawned.sigkill) : 0;
+    await Promise.race([promise, wait(sigkill)]);
     if (!filtered.length) return;
 
     logger.debug('Sending SIGKILL signal');
     filtered.forEach(({ ps }) => ps.kill('SIGKILL'));
   }
 
-  return p;
+  await promise;
 }
