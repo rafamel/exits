@@ -45,7 +45,7 @@ Options:
       Default: signal,error,success.
       Example: --at signal,error
   --log <level>       Logging level, one of trace, debug, info, warn, error, or silent.
-      Default: ${DEFAULT_LOG_LEVEL}.
+      Default: info.
       Example: --log info
   --fail              Exits with code 1 if the last command fails.
   -h, --help          Show help
