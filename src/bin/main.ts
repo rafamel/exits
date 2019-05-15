@@ -109,7 +109,7 @@ export default async function main(argv: string[]): Promise<void> {
     if (signal === 'ERROR') context.run = options.at.includes('error');
     else if (signal) context.run = options.at.includes('signal');
     else context.run = options.at.includes('success');
-  }, 1);
+  }, 0);
   add(async (type, arg, context) => {
     if (!context.run) return;
     logger.info('\n' + chalk.bold.green('Running: ') + cmd._[1]);
@@ -119,5 +119,5 @@ export default async function main(argv: string[]): Promise<void> {
         setOptions({ resolver: () => resolver('exit', 1) });
       }
     });
-  }, 0);
+  }, 1);
 }
