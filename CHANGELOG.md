@@ -1,3 +1,28 @@
+# [1.0.0](https://github.com/rafamel/exits/compare/v0.5.1...v1.0.0) (2019-05-15)
+
+
+### Bug Fixes
+
+* **deps:** updates dependencies ([1ed4996](https://github.com/rafamel/exits/commit/1ed4996))
+
+
+### Features
+
+* **add:** makes it so tasks with a lower priority index are executed first ([56711fc](https://github.com/rafamel/exits/commit/56711fc))
+* **methods/add:** takes priority as first argument ([e25579f](https://github.com/rafamel/exits/commit/e25579f))
+* **methods/spawn:** allows for second argument `args` to be omitted ([34c6aee](https://github.com/rafamel/exits/commit/34c6aee))
+
+
+### BREAKING CHANGES
+
+* **methods/add:** While `priority` was previously an optional second argument for `add`, if passed,
+it must now be its first argument; otherwise `add` can also take a callback function as its first
+argument.
+* **add:** While previously a larger priority index meant a task would execute first, now the
+opposite holds true, as it might be a more intuitive behavior to most.
+
+
+
 ## [0.5.1](https://github.com/rafamel/exits/compare/v0.5.0...v0.5.1) (2019-05-09)
 
 
