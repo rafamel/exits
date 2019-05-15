@@ -22,14 +22,14 @@ describe(`signal`, () => {
 
     const res1 = await terminate('signal', 'SIGINT');
     expect(res1).toBe('foo');
-    expect(handler).toBeCalledTimes(1);
-    expect(handler).toBeCalledWith('signal', 'SIGINT');
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith('signal', 'SIGINT');
 
     resetHandler();
     const res2 = await terminate('signal', 'SIGHUP');
     expect(res2).toBe('foo');
-    expect(handler).toBeCalledTimes(1);
-    expect(handler).toBeCalledWith('signal', 'SIGHUP');
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith('signal', 'SIGHUP');
   });
   test(`calls resolver when not attached to signal`, async () => {
     store.state.attached.signal = false;
@@ -40,13 +40,13 @@ describe(`signal`, () => {
     };
 
     const res1 = await terminate('signal', 'SIGINT');
-    expect(handler).not.toBeCalled();
+    expect(handler).not.toHaveBeenCalled();
     expect(res1).toBe('bar');
     expect(called).toHaveLength(1);
     expect(called[0]).toEqual(['signal', 'SIGINT']);
 
     const res2 = await terminate('signal', 'SIGHUP');
-    expect(handler).not.toBeCalled();
+    expect(handler).not.toHaveBeenCalled();
     expect(res2).toBe('bar');
     expect(called).toHaveLength(2);
     expect(called[1]).toEqual(['signal', 'SIGHUP']);
@@ -60,8 +60,8 @@ describe(`exception`, () => {
     const err = Error();
     const res = await terminate('exception', err);
     expect(res).toBe('foo');
-    expect(handler).toBeCalledTimes(1);
-    expect(handler).toBeCalledWith('exception', err);
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith('exception', err);
   });
   test(`calls resolver when not attached to exception`, async () => {
     store.state.attached.exception = false;
@@ -73,7 +73,7 @@ describe(`exception`, () => {
 
     const err = Error();
     const res = await terminate('exception', err);
-    expect(handler).not.toBeCalled();
+    expect(handler).not.toHaveBeenCalled();
     expect(res).toBe('bar');
     expect(called).toHaveLength(1);
     expect(called[0]).toEqual(['exception', err]);
@@ -87,8 +87,8 @@ describe(`rejection`, () => {
     const err = Error();
     const res = await terminate('rejection', err);
     expect(res).toBe('foo');
-    expect(handler).toBeCalledTimes(1);
-    expect(handler).toBeCalledWith('rejection', err);
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith('rejection', err);
   });
   test(`calls resolver when not attached to rejection`, async () => {
     store.state.attached.rejection = false;
@@ -100,7 +100,7 @@ describe(`rejection`, () => {
 
     const err = Error();
     const res = await terminate('rejection', err);
-    expect(handler).not.toBeCalled();
+    expect(handler).not.toHaveBeenCalled();
     expect(res).toBe('bar');
     expect(called).toHaveLength(1);
     expect(called[0]).toEqual(['rejection', err]);
@@ -113,14 +113,14 @@ describe(`exit`, () => {
 
     const res1 = await terminate('exit', 0);
     expect(res1).toBe('foo');
-    expect(handler).toBeCalledTimes(1);
-    expect(handler).toBeCalledWith('exit', 0);
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith('exit', 0);
 
     resetHandler();
     const res2 = await terminate('exit', 1);
     expect(res2).toBe('foo');
-    expect(handler).toBeCalledTimes(1);
-    expect(handler).toBeCalledWith('exit', 1);
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith('exit', 1);
   });
   test(`calls resolver when not attached to exit`, async () => {
     store.state.attached.exit = false;
@@ -131,13 +131,13 @@ describe(`exit`, () => {
     };
 
     const res1 = await terminate('exit', 0);
-    expect(handler).not.toBeCalled();
+    expect(handler).not.toHaveBeenCalled();
     expect(res1).toBe('bar');
     expect(called).toHaveLength(1);
     expect(called[0]).toEqual(['exit', 0]);
 
     const res2 = await terminate('exit', 1);
-    expect(handler).not.toBeCalled();
+    expect(handler).not.toHaveBeenCalled();
     expect(res2).toBe('bar');
     expect(called).toHaveLength(2);
     expect(called[1]).toEqual(['exit', 1]);
@@ -159,7 +159,7 @@ describe(`unknown type`, () => {
     };
 
     const res = await terminate('unknown_type' as any, 0);
-    expect(handler).not.toBeCalled();
+    expect(handler).not.toHaveBeenCalled();
     expect(res).toBe('bar');
     expect(called).toHaveLength(1);
     expect(called[0]).toEqual(['unknown_type', 0]);
@@ -178,7 +178,7 @@ describe(`unknown type`, () => {
     };
 
     const res = await terminate('unknown_type' as any, 0);
-    expect(handler).not.toBeCalled();
+    expect(handler).not.toHaveBeenCalled();
     expect(res).toBe('bar');
     expect(called).toHaveLength(1);
     expect(called[0]).toEqual(['unknown_type', 0]);

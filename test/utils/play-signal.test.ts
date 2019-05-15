@@ -20,9 +20,9 @@ describe(`spawned.signals = 'detached'`, () => {
     store.options.spawned.signals = 'detached';
 
     expect(playSignal('SIGHUP')).toBe(true);
-    expect(store.processes.foo.ps.kill).not.toBeCalled();
-    expect(store.processes.bar.ps.kill).not.toBeCalled();
-    expect(store.processes.baz.ps.kill).not.toBeCalled();
+    expect(store.processes.foo.ps.kill).not.toHaveBeenCalled();
+    expect(store.processes.bar.ps.kill).not.toHaveBeenCalled();
+    expect(store.processes.baz.ps.kill).not.toHaveBeenCalled();
     expect(store.processes.foo.triggered).toBe(false);
     expect(store.processes.bar.triggered).toBe(false);
     expect(store.processes.baz.triggered).toBe(false);
@@ -36,9 +36,9 @@ describe(`spawned.signals = 'detached'`, () => {
     store.processes.baz.triggered = true;
 
     expect(playSignal('SIGHUP')).toBe(true);
-    expect(store.processes.foo.ps.kill).not.toBeCalled();
-    expect(store.processes.bar.ps.kill).not.toBeCalled();
-    expect(store.processes.baz.ps.kill).not.toBeCalled();
+    expect(store.processes.foo.ps.kill).not.toHaveBeenCalled();
+    expect(store.processes.bar.ps.kill).not.toHaveBeenCalled();
+    expect(store.processes.baz.ps.kill).not.toHaveBeenCalled();
     expect(store.processes.foo.triggered).toBe(false);
     expect(store.processes.bar.triggered).toBe(false);
   });
@@ -52,9 +52,9 @@ describe(`spawned.signals = 'detached'`, () => {
     store.processes.baz.triggered = true;
 
     expect(playSignal('SIGQUIT')).toBe(false);
-    expect(store.processes.foo.ps.kill).toBeCalledWith('SIGQUIT');
-    expect(store.processes.bar.ps.kill).not.toBeCalled();
-    expect(store.processes.baz.ps.kill).not.toBeCalled();
+    expect(store.processes.foo.ps.kill).toHaveBeenCalledWith('SIGQUIT');
+    expect(store.processes.bar.ps.kill).not.toHaveBeenCalled();
+    expect(store.processes.baz.ps.kill).not.toHaveBeenCalled();
     expect(store.processes.foo.triggered).toBe(true);
     expect(store.processes.bar.triggered).toBe(false);
   });

@@ -71,7 +71,7 @@ describe(`Doesn't run if already triggered`, () => {
 
     await wait(100);
     expect(res).toBe(true);
-    expect(store.options.resolver).not.toBeCalled();
+    expect(store.options.resolver).not.toHaveBeenCalled();
   });
   test(`triggered is true`, async () => {
     addToStack();
@@ -81,7 +81,7 @@ describe(`Doesn't run if already triggered`, () => {
 
     await wait(100);
     expect(res).toBe(true);
-    expect(store.options.resolver).not.toBeCalled();
+    expect(store.options.resolver).not.toHaveBeenCalled();
   });
 });
 
@@ -94,9 +94,9 @@ describe(`playSignal`, () => {
     handler('signal', 'SIGHUP').then(() => (res = true));
 
     await wait(100);
-    expect(playSignal).toBeCalledWith('SIGHUP');
+    expect(playSignal).toHaveBeenCalledWith('SIGHUP');
     expect(res).toBe(true);
-    expect(store.options.resolver).not.toBeCalled();
+    expect(store.options.resolver).not.toHaveBeenCalled();
   });
   test(`Doesn't check playSignal if type is not signal`, async () => {
     playSignal.mockReset();
@@ -108,7 +108,7 @@ describe(`playSignal`, () => {
 
     reset();
     await handler('exception', Error());
-    expect(playSignal).not.toBeCalled();
+    expect(playSignal).not.toHaveBeenCalled();
   });
 });
 
@@ -210,11 +210,11 @@ describe(`killWait`, () => {
     let res;
     handler('exit', 0).then(() => (res = true));
     await wait(100);
-    expect(killWait).toBeCalledTimes(1);
+    expect(killWait).toHaveBeenCalledTimes(1);
     await wait(1000);
-    expect(killWait).toBeCalledTimes(1);
+    expect(killWait).toHaveBeenCalledTimes(1);
     await wait(1000);
-    expect(killWait).toBeCalledTimes(2);
+    expect(killWait).toHaveBeenCalledTimes(2);
     expect(store.options.resolver).not.toHaveBeenCalled();
     expect(res).not.toBe(true);
     await wait(1000);
@@ -240,14 +240,14 @@ describe(`errors`, () => {
 
     await handler('exit', 1);
     expect(arr).toEqual([1, 2, 3]);
-    expect(store.options.resolver).toBeCalledWith('exit', 1);
+    expect(store.options.resolver).toHaveBeenCalledWith('exit', 1);
   });
   test(`resolver gets called on error`, async () => {
     killWait.mockReset();
     killWait.mockImplementationOnce(() => Promise.reject(Error));
 
     await expect(handler('exit', 1)).resolves.not.toThrow();
-    expect(store.options.resolver).toBeCalledWith('exit', 1);
+    expect(store.options.resolver).toHaveBeenCalledWith('exit', 1);
   });
 });
 
@@ -256,13 +256,13 @@ describe(`teardown`, () => {
     addToStack();
     unattach.mockReset();
 
-    expect(unattach).not.toBeCalled();
+    expect(unattach).not.toHaveBeenCalled();
     const p = handler('exit', 1);
 
     await wait(100);
-    expect(unattach).not.toBeCalled();
+    expect(unattach).not.toHaveBeenCalled();
     await p;
-    expect(unattach).toBeCalled();
+    expect(unattach).toHaveBeenCalled();
   });
 });
 
@@ -275,9 +275,11 @@ describe(`state`, () => {
     await wait(100);
 
     expect(setState).toHaveBeenCalledTimes(1);
-    expect(setState).toBeCalledWith({ triggered: { type: 'exit', arg: 1 } });
+    expect(setState).toHaveBeenCalledWith({
+      triggered: { type: 'exit', arg: 1 }
+    });
     await p;
     expect(setState).toHaveBeenCalledTimes(2);
-    expect(setState).toBeCalledWith({ done: true });
+    expect(setState).toHaveBeenCalledWith({ done: true });
   });
 });

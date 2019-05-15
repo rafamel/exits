@@ -47,8 +47,8 @@ describe(`attach()`, () => {
     SIGNALS.forEach((signal) => {
       expect(on[signal]).toBe(handlers.signal);
     });
-    expect(setState).toBeCalledTimes(1);
-    expect(setState).toBeCalledWith({
+    expect(setState).toHaveBeenCalledTimes(1);
+    expect(setState).toHaveBeenCalledWith({
       attached: {
         signal: true,
         exception: true,
@@ -75,7 +75,7 @@ describe(`attach()`, () => {
     attach();
 
     expect(on._recall).toBeUndefined();
-    expect(setState).toBeCalledTimes(1);
+    expect(setState).toHaveBeenCalledTimes(1);
   });
 
   test(`attaches to those passed as true`, () => {
@@ -94,8 +94,8 @@ describe(`attach()`, () => {
     SIGNALS.forEach((signal) => {
       expect(on1[signal]).toBe(handlers.signal);
     });
-    expect(setState).toBeCalledTimes(1);
-    expect(setState).toBeCalledWith({
+    expect(setState).toHaveBeenCalledTimes(1);
+    expect(setState).toHaveBeenCalledWith({
       attached: {
         signal: true,
         exception: false,
@@ -119,8 +119,8 @@ describe(`attach()`, () => {
     SIGNALS.forEach((signal) => {
       expect(on2[signal]).toBeFalsy();
     });
-    expect(setState).toBeCalledTimes(1);
-    expect(setState).toBeCalledWith({
+    expect(setState).toHaveBeenCalledTimes(1);
+    expect(setState).toHaveBeenCalledWith({
       attached: {
         signal: false,
         exception: true,
@@ -141,8 +141,8 @@ describe(`attach()`, () => {
     SIGNALS.forEach((signal) => {
       expect(on[signal]).toBe(handlers.signal);
     });
-    expect(setState).toBeCalledTimes(1);
-    expect(setState).toBeCalledWith({
+    expect(setState).toHaveBeenCalledTimes(1);
+    expect(setState).toHaveBeenCalledWith({
       attached: {
         signal: true,
         exception: true,
@@ -157,8 +157,8 @@ describe(`attach()`, () => {
     create(on);
 
     attach({ rejection: false });
-    expect(setState).toBeCalledTimes(1);
-    expect(setState).toBeCalledWith({
+    expect(setState).toHaveBeenCalledTimes(1);
+    expect(setState).toHaveBeenCalledWith({
       attached: {
         signal: true,
         exception: true,
@@ -177,8 +177,8 @@ describe(`attach()`, () => {
       }
     };
     attach({ exception: false });
-    expect(setState).toBeCalledTimes(2);
-    expect(setState).toBeCalledWith({
+    expect(setState).toHaveBeenCalledTimes(2);
+    expect(setState).toHaveBeenCalledWith({
       attached: {
         signal: true,
         exception: true,
@@ -206,8 +206,8 @@ describe(`unattach()`, () => {
 
     unattach();
     expect(Object.keys(on)).toHaveLength(0);
-    expect(setState).toBeCalledTimes(1);
-    expect(setState).toBeCalledWith({
+    expect(setState).toHaveBeenCalledTimes(1);
+    expect(setState).toHaveBeenCalledWith({
       attached: {
         signal: false,
         exception: false,
@@ -231,8 +231,8 @@ describe(`unattach()`, () => {
 
     unattach();
     expect(Object.keys(on)).toHaveLength(0);
-    expect(setState).toBeCalledTimes(1);
-    expect(setState).toBeCalledWith({
+    expect(setState).toHaveBeenCalledTimes(1);
+    expect(setState).toHaveBeenCalledWith({
       attached: {
         signal: false,
         exception: false,
@@ -259,11 +259,11 @@ describe(`unattach()`, () => {
       rejection: true,
       exit: false
     });
-    expect(setState).toBeCalledTimes(1);
+    expect(setState).toHaveBeenCalledTimes(1);
     expect(Object.keys(on1)).toHaveLength(2);
     expect(on1.uncaughtException).toBeTruthy();
     expect(on1.beforeExit).toBeTruthy();
-    expect(setState).toBeCalledWith({
+    expect(setState).toHaveBeenCalledWith({
       attached: {
         signal: false,
         exception: true,
@@ -287,12 +287,12 @@ describe(`unattach()`, () => {
       signal: false,
       rejection: false
     });
-    expect(setState).toBeCalledTimes(1);
+    expect(setState).toHaveBeenCalledTimes(1);
     expect(Object.keys(on2)).toHaveLength(SIGNALS.length);
     SIGNALS.forEach((signal) => {
       expect(on2[signal]).toBeTruthy();
     });
-    expect(setState).toBeCalledWith({
+    expect(setState).toHaveBeenCalledWith({
       attached: {
         signal: true,
         exception: false,
@@ -309,7 +309,7 @@ describe(`unattach()`, () => {
       rejection: false,
       exit: false
     });
-    expect(setState).not.toBeCalled();
+    expect(setState).not.toHaveBeenCalled();
   });
 });
 
@@ -318,14 +318,14 @@ describe(`handlers`, () => {
     resetHandler();
     const res1 = await handlers.signal('SIGINT');
     expect(res1).toBe('foo');
-    expect(handler).toBeCalledTimes(1);
-    expect(handler).toBeCalledWith('signal', 'SIGINT');
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith('signal', 'SIGINT');
 
     resetHandler();
     const res2 = await handlers.signal('SIGTERM');
     expect(res2).toBe('foo');
-    expect(handler).toBeCalledTimes(1);
-    expect(handler).toBeCalledWith('signal', 'SIGTERM');
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith('signal', 'SIGTERM');
   });
   test(`exception calls handler with arg`, async () => {
     resetHandler();
@@ -333,40 +333,40 @@ describe(`handlers`, () => {
     const err = Error();
     const res = await handlers.exception(err);
     expect(res).toBe('foo');
-    expect(handler).toBeCalledTimes(1);
-    expect(handler).toBeCalledWith('exception', err);
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith('exception', err);
   });
   test(`rejection calls handler with arg`, async () => {
     resetHandler();
     const err = Error();
     const res1 = await handlers.rejection(null, Promise.reject(err));
     expect(res1).toBe('foo');
-    expect(handler).toBeCalledTimes(1);
-    expect(handler).toBeCalledWith('rejection', err);
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith('rejection', err);
 
     resetHandler();
     // eslint-disable-next-line prefer-promise-reject-errors
     const res2 = await handlers.rejection(null, Promise.reject('string'));
     expect(res2).toBe('foo');
-    expect(handler).toBeCalledTimes(1);
+    expect(handler).toHaveBeenCalledTimes(1);
 
     resetHandler();
     // eslint-disable-next-line prefer-promise-reject-errors
     const res3 = await handlers.rejection(null, Promise.reject());
     expect(res3).toBe('foo');
-    expect(handler).toBeCalledTimes(1);
+    expect(handler).toHaveBeenCalledTimes(1);
   });
   test(`exit calls handler with arg`, async () => {
     resetHandler();
     const res1 = await handlers.exit(0);
     expect(res1).toBe('foo');
-    expect(handler).toBeCalledTimes(1);
-    expect(handler).toBeCalledWith('exit', 0);
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith('exit', 0);
 
     resetHandler();
     const res2 = await handlers.exit(1);
     expect(res2).toBe('foo');
-    expect(handler).toBeCalledTimes(1);
-    expect(handler).toBeCalledWith('exit', 1);
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith('exit', 1);
   });
 });
