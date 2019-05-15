@@ -24,18 +24,24 @@ test(`Adds with default values`, () => {
   expect(store.stack[0].priority).toBe(0);
 });
 
-test(`Priority is 0 for null`, () => {
-  add(() => {}, null);
+test(`Priority is 0 for null | undefined`, () => {
+  add(() => {});
+  add(null, () => {});
+  add(undefined, () => {});
+
+  expect(store.stack).toHaveLength(3);
   expect(store.stack[0].priority).toBe(0);
+  expect(store.stack[1].priority).toBe(0);
+  expect(store.stack[2].priority).toBe(0);
 });
 
 test(`Adds with custom priority`, () => {
-  add(() => {}, -1);
+  add(-1, () => {});
   expect(store.stack[0].priority).toBe(-1);
 });
 
 test(`Adds with custom priority & attachments`, () => {
-  add(() => {}, 1, { exception: false, rejection: true, exit: false });
+  add(1, () => {}, { exception: false, rejection: true, exit: false });
   expect(store.stack[0].priority).toBe(1);
   expect(store.stack[0].on).toEqual({
     signal: true,
@@ -62,18 +68,18 @@ test(`Adds elements in priority order`, () => {
     .fill(0)
     .map(() => () => {});
 
-  add(els[0], -5);
-  add(els[1], 0);
-  add(els[2], -2);
-  add(els[3], 2);
-  add(els[4], 3);
+  add(-5, els[0]);
+  add(0, els[1]);
+  add(-2, els[2]);
+  add(2, els[3]);
+  add(3, els[4]);
   add(els[5]);
-  add(els[6], -1);
-  add(els[7], 0);
-  add(els[8], 1);
+  add(-1, els[6]);
+  add(0, els[7]);
+  add(1, els[8]);
   add(els[9]);
-  add(els[10], 3);
-  add(els[11], -5);
+  add(3, els[10]);
+  add(-5, els[11]);
 
   expect(store.stack).toHaveLength(12);
   expect(store.stack.map((x) => x.fn)).toEqual([
@@ -97,14 +103,14 @@ test(`Removes elements`, () => {
     .fill(0)
     .map(() => () => {});
 
-  add(els[0], -5);
-  const a = add(els[1], 0);
-  add(els[2], -2);
-  const b = add(els[3], 2);
-  add(els[4], 3);
+  add(-5, els[0]);
+  const a = add(0, els[1]);
+  add(-2, els[2]);
+  const b = add(2, els[3]);
+  add(3, els[4]);
   add(els[5]);
-  const c = add(els[6], -1);
-  add(els[7], 0);
+  const c = add(-1, els[6]);
+  add(0, els[7]);
 
   expect(store.stack).toHaveLength(8);
   a();

@@ -108,9 +108,9 @@ describe(`--at`, () => {
         mocks.add.mockClear();
 
         await expect(main(args.split(' '))).resolves.toBeUndefined();
-        expect(typeof mocks.add.mock.calls[0][0]).toBe('function');
+        expect(typeof mocks.add.mock.calls[0][1]).toBe('function');
 
-        const fn = mocks.add.mock.calls[0][0];
+        const fn = mocks.add.mock.calls[0][1];
         const context = { run: false };
         await expect(fn(null, null, context)).resolves.toBeUndefined();
         expect(context.run).toBe(true);
@@ -125,9 +125,9 @@ describe(`--at`, () => {
         }));
 
         await expect(main(args.split(' '))).resolves.toBeUndefined();
-        expect(typeof mocks.add.mock.calls[0][0]).toBe('function');
+        expect(typeof mocks.add.mock.calls[0][1]).toBe('function');
 
-        const fn = mocks.add.mock.calls[0][0];
+        const fn = mocks.add.mock.calls[0][1];
         const context = { run: false };
         await expect(fn(null, null, context)).resolves.toBeUndefined();
         expect(context.run).toBe(true);
@@ -142,9 +142,9 @@ describe(`--at`, () => {
         }));
 
         await expect(main(args.split(' '))).resolves.toBeUndefined();
-        expect(typeof mocks.add.mock.calls[0][0]).toBe('function');
+        expect(typeof mocks.add.mock.calls[0][1]).toBe('function');
 
-        const fn = mocks.add.mock.calls[0][0];
+        const fn = mocks.add.mock.calls[0][1];
         const context = { run: false };
         await expect(fn(null, null, context)).resolves.toBeUndefined();
         expect(context.run).toBe(true);
@@ -155,9 +155,9 @@ describe(`--at`, () => {
     test(`success`, async () => {
       const args = '--at success foo bar'.split(' ');
       await expect(main(args)).resolves.toBeUndefined();
-      expect(typeof mocks.add.mock.calls[0][0]).toBe('function');
+      expect(typeof mocks.add.mock.calls[0][1]).toBe('function');
 
-      const fn = mocks.add.mock.calls[0][0];
+      const fn = mocks.add.mock.calls[0][1];
       const context = { run: false };
       await expect(fn(null, null, context)).resolves.toBeUndefined();
       expect(context.run).toBe(true);
@@ -169,9 +169,9 @@ describe(`--at`, () => {
 
       const args = '--at success foo bar'.split(' ');
       await expect(main(args)).resolves.toBeUndefined();
-      expect(typeof mocks.add.mock.calls[0][0]).toBe('function');
+      expect(typeof mocks.add.mock.calls[0][1]).toBe('function');
 
-      const fn = mocks.add.mock.calls[0][0];
+      const fn = mocks.add.mock.calls[0][1];
       const context = { run: false };
       await expect(fn(null, null, context)).resolves.toBeUndefined();
       expect(context.run).toBe(false);
@@ -183,9 +183,9 @@ describe(`--at`, () => {
 
       const args = '--at success foo bar'.split(' ');
       await expect(main(args)).resolves.toBeUndefined();
-      expect(typeof mocks.add.mock.calls[0][0]).toBe('function');
+      expect(typeof mocks.add.mock.calls[0][1]).toBe('function');
 
-      const fn = mocks.add.mock.calls[0][0];
+      const fn = mocks.add.mock.calls[0][1];
       const context = { run: false };
       await expect(fn(null, null, context)).resolves.toBeUndefined();
       expect(context.run).toBe(false);
@@ -195,9 +195,9 @@ describe(`--at`, () => {
     test(`success`, async () => {
       const args = '--at signal foo bar'.split(' ');
       await expect(main(args)).resolves.toBeUndefined();
-      expect(typeof mocks.add.mock.calls[0][0]).toBe('function');
+      expect(typeof mocks.add.mock.calls[0][1]).toBe('function');
 
-      const fn = mocks.add.mock.calls[0][0];
+      const fn = mocks.add.mock.calls[0][1];
       const context = { run: false };
       await expect(fn(null, null, context)).resolves.toBeUndefined();
       expect(context.run).toBe(false);
@@ -209,9 +209,9 @@ describe(`--at`, () => {
 
       const args = '--at signal foo bar'.split(' ');
       await expect(main(args)).resolves.toBeUndefined();
-      expect(typeof mocks.add.mock.calls[0][0]).toBe('function');
+      expect(typeof mocks.add.mock.calls[0][1]).toBe('function');
 
-      const fn = mocks.add.mock.calls[0][0];
+      const fn = mocks.add.mock.calls[0][1];
       const context = { run: false };
       await expect(fn(null, null, context)).resolves.toBeUndefined();
       expect(context.run).toBe(true);
@@ -223,9 +223,9 @@ describe(`--at`, () => {
 
       const args = '--at signal foo bar'.split(' ');
       await expect(main(args)).resolves.toBeUndefined();
-      expect(typeof mocks.add.mock.calls[0][0]).toBe('function');
+      expect(typeof mocks.add.mock.calls[0][1]).toBe('function');
 
-      const fn = mocks.add.mock.calls[0][0];
+      const fn = mocks.add.mock.calls[0][1];
       const context = { run: false };
       await expect(fn(null, null, context)).resolves.toBeUndefined();
       expect(context.run).toBe(false);
@@ -235,9 +235,9 @@ describe(`--at`, () => {
     test(`success`, async () => {
       const args = '--at error foo bar'.split(' ');
       await expect(main(args)).resolves.toBeUndefined();
-      expect(typeof mocks.add.mock.calls[0][0]).toBe('function');
+      expect(typeof mocks.add.mock.calls[0][1]).toBe('function');
 
-      const fn = mocks.add.mock.calls[0][0];
+      const fn = mocks.add.mock.calls[0][1];
       const context = { run: false };
       await expect(fn(null, null, context)).resolves.toBeUndefined();
       expect(context.run).toBe(false);
@@ -249,9 +249,9 @@ describe(`--at`, () => {
 
       const args = '--at error foo bar'.split(' ');
       await expect(main(args)).resolves.toBeUndefined();
-      expect(typeof mocks.add.mock.calls[0][0]).toBe('function');
+      expect(typeof mocks.add.mock.calls[0][1]).toBe('function');
 
-      const fn = mocks.add.mock.calls[0][0];
+      const fn = mocks.add.mock.calls[0][1];
       const context = { run: false };
       await expect(fn(null, null, context)).resolves.toBeUndefined();
       expect(context.run).toBe(false);
@@ -263,9 +263,9 @@ describe(`--at`, () => {
 
       const args = '--at error foo bar'.split(' ');
       await expect(main(args)).resolves.toBeUndefined();
-      expect(typeof mocks.add.mock.calls[0][0]).toBe('function');
+      expect(typeof mocks.add.mock.calls[0][1]).toBe('function');
 
-      const fn = mocks.add.mock.calls[0][0];
+      const fn = mocks.add.mock.calls[0][1];
       const context = { run: false };
       await expect(fn(null, null, context)).resolves.toBeUndefined();
       expect(context.run).toBe(true);
@@ -288,10 +288,10 @@ describe(`spawn`, () => {
     const args = 'foo bar'.split(' ');
     await expect(main(args)).resolves.toBeUndefined();
     expect(mocks.add).toHaveBeenCalledTimes(2);
-    expect(typeof mocks.add.mock.calls[1][0]).toBe('function');
+    expect(typeof mocks.add.mock.calls[1][1]).toBe('function');
 
     mocks.spawn.mockClear();
-    const fn = mocks.add.mock.calls[1][0];
+    const fn = mocks.add.mock.calls[1][1];
     await fn(null, null, { run: false });
     expect(mocks.spawn).toHaveBeenCalledTimes(0);
 
@@ -306,7 +306,7 @@ describe(`spawn`, () => {
   test(`--stdio ignore`, async () => {
     const args = '--stdio ignore foo bar'.split(' ');
     await expect(main(args)).resolves.toBeUndefined();
-    const fn = mocks.add.mock.calls[1][0];
+    const fn = mocks.add.mock.calls[1][1];
     await fn(null, null, { run: true });
 
     expect(mocks.spawn).toHaveBeenCalledTimes(2);
@@ -316,7 +316,7 @@ describe(`spawn`, () => {
   test(`--stdio ignore,pipe,pipe`, async () => {
     const args = '--stdio ignore,pipe,pipe foo bar'.split(' ');
     await expect(main(args)).resolves.toBeUndefined();
-    const fn = mocks.add.mock.calls[1][0];
+    const fn = mocks.add.mock.calls[1][1];
     await fn(null, null, { run: true });
 
     expect(mocks.spawn).toHaveBeenCalledTimes(2);
@@ -336,7 +336,7 @@ describe(`spawn`, () => {
     await expect(main(args)).resolves.toBeUndefined();
 
     mocks.options.mockClear();
-    const fn = mocks.add.mock.calls[1][0];
+    const fn = mocks.add.mock.calls[1][1];
     await fn(null, null, { run: false });
     expect(mocks.options).not.toHaveBeenCalled();
     await fn(null, null, { run: true });
@@ -353,7 +353,7 @@ describe(`spawn`, () => {
     await expect(main(args)).resolves.toBeUndefined();
 
     mocks.options.mockClear();
-    const fn = mocks.add.mock.calls[1][0];
+    const fn = mocks.add.mock.calls[1][1];
     await fn(null, null, { run: false });
     expect(mocks.options).not.toHaveBeenCalled();
     await fn(null, null, { run: true });
@@ -368,7 +368,7 @@ describe(`spawn`, () => {
     mocks.spawn.mockImplementationOnce(() => ({
       promise: Promise.reject(Error())
     }));
-    const fn = mocks.add.mock.calls[1][0];
+    const fn = mocks.add.mock.calls[1][1];
     await fn(null, null, { run: true });
     expect(mocks.options).toHaveBeenCalledTimes(1);
     expect(mocks.options.mock.calls[0][0]).toHaveProperty('resolver');

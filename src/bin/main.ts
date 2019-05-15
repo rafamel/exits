@@ -104,13 +104,13 @@ export default async function main(argv: string[]): Promise<void> {
     return 'ERROR';
   });
 
-  add(async (type, arg, context) => {
+  add(0, async (type, arg, context) => {
     const signal = await promise;
     if (signal === 'ERROR') context.run = options.at.includes('error');
     else if (signal) context.run = options.at.includes('signal');
     else context.run = options.at.includes('success');
-  }, 0);
-  add(async (type, arg, context) => {
+  });
+  add(1, async (type, arg, context) => {
     if (!context.run) return;
     logger.info('\n' + chalk.bold.green('Running: ') + cmd._[1]);
     await spawn(cmd._[1]).catch((err) => {
@@ -119,5 +119,5 @@ export default async function main(argv: string[]): Promise<void> {
         setOptions({ resolver: () => resolver('exit', 1) });
       }
     });
-  }, 1);
+  });
 }

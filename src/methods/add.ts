@@ -1,12 +1,21 @@
 import { IAttach, TFn } from '~/types';
 import store from '~/store';
 
-export default function add(
+export default add;
+
+function add(
+  priority: number | null | undefined,
   fn: TFn,
-  priority?: number | null,
   options?: Partial<IAttach>
-): () => void {
-  if (!priority) priority = 0;
+): () => void;
+function add(fn: TFn, options?: Partial<IAttach>): () => void;
+function add(...args: any[]): () => void {
+  const hasPriority = typeof args[0] !== 'function';
+
+  const priority: number = hasPriority ? args[0] || 0 : 0;
+  const fn: TFn = hasPriority ? args[1] : args[0];
+  const options: Partial<IAttach> | undefined = hasPriority ? args[2] : args[1];
+
   const opts: IAttach = Object.assign(
     { signal: true, exception: true, rejection: true, exit: true },
     options
