@@ -315,8 +315,6 @@ describe(`unattach()`, () => {
 
 describe(`handlers`, () => {
   test(`signal calls handler with arg`, async () => {
-    expect.assertions(6);
-
     resetHandler();
     const res1 = await handlers.signal('SIGINT');
     expect(res1).toBe('foo');
@@ -330,7 +328,6 @@ describe(`handlers`, () => {
     expect(handler).toBeCalledWith('signal', 'SIGTERM');
   });
   test(`exception calls handler with arg`, async () => {
-    expect.assertions(3);
     resetHandler();
 
     const err = Error();
@@ -340,8 +337,6 @@ describe(`handlers`, () => {
     expect(handler).toBeCalledWith('exception', err);
   });
   test(`rejection calls handler with arg`, async () => {
-    expect.assertions(7);
-
     resetHandler();
     const err = Error();
     const res1 = await handlers.rejection(null, Promise.reject(err));
@@ -362,8 +357,6 @@ describe(`handlers`, () => {
     expect(handler).toBeCalledTimes(1);
   });
   test(`exit calls handler with arg`, async () => {
-    expect.assertions(6);
-
     resetHandler();
     const res1 = await handlers.exit(0);
     expect(res1).toBe('foo');

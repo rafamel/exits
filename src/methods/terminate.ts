@@ -1,16 +1,13 @@
 import handler from '~/utils/handler';
 import store from '~/store';
-import { TSignal } from '~/types';
+import { TSignal, TExitType } from '~/types';
 
 export default terminate;
 
 function terminate(type: 'signal', arg: TSignal): Promise<void>;
 function terminate(type: 'exception' | 'rejection', arg: Error): Promise<void>;
 function terminate(type: 'exit', arg: number): Promise<void>;
-async function terminate(
-  type: 'signal' | 'exception' | 'rejection' | 'exit',
-  arg: any
-): Promise<void> {
+async function terminate(type: TExitType, arg: any): Promise<void> {
   switch (type) {
     case 'signal':
       if (store.state.attached.signal) return handler('signal', arg);

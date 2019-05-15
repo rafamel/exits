@@ -1,20 +1,14 @@
 import logger from '~/utils/logger';
 import store from '~/store';
-import { TSignal } from '~/types';
+import { TSignal, TExitType } from '~/types';
 
 export default resolver;
 
 function resolver(type: 'signal', arg: TSignal): void;
 function resolver(type: 'exception' | 'rejection', arg: Error): void;
 function resolver(type: 'exit', arg: number): void;
-function resolver(
-  type: 'signal' | 'exception' | 'rejection' | 'exit',
-  arg: TSignal | Error | number
-): void;
-function resolver(
-  type: 'signal' | 'exception' | 'rejection' | 'exit',
-  arg: TSignal | Error | number
-): void {
+function resolver(type: TExitType, arg: TSignal | Error | number): void;
+function resolver(type: TExitType, arg: TSignal | Error | number): void {
   const { process } = store;
   switch (type) {
     case 'signal':

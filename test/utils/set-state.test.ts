@@ -7,10 +7,9 @@ import { wait } from 'promist';
 
 logger.setLevel('silent');
 
-test(`updates state key`, async () => {
-  expect.assertions(1);
-  reset();
+beforeEach(reset);
 
+test(`updates state key`, async () => {
   const update = {
     signal: true,
     exception: false,
@@ -26,9 +25,6 @@ test(`updates state key`, async () => {
 });
 
 test(`updates state keys`, async () => {
-  expect.assertions(1);
-  reset();
-
   const attached = {
     signal: true,
     exception: false,
@@ -47,8 +43,6 @@ test(`updates state keys`, async () => {
 });
 
 test(`accumulates promise`, async () => {
-  expect.assertions(1);
-  reset();
   store.subscribers.attached = [() => wait(750)];
   const update = {
     signal: true,
@@ -64,17 +58,10 @@ test(`accumulates promise`, async () => {
 });
 
 test(`doesn't reject for non existent prop`, async () => {
-  expect.assertions(1);
-  reset();
-
-  // @ts-ignore
-  await expect(setState({ hello: 1 })).resolves.toBeUndefined();
+  await expect(setState({ hello: 1 } as any)).resolves.toBeUndefined();
 });
 
 test(`calls subscribers for first level updated props (async)`, async () => {
-  expect.assertions(2);
-  reset();
-
   const arr: number[] = [];
   store.subscribers = {
     attached: [() => arr.push(1), () => arr.push(2), () => arr.push(3)],
@@ -98,9 +85,6 @@ test(`calls subscribers for first level updated props (async)`, async () => {
 });
 
 test(`doesn't reject & continues throwing/rejecting subscriber`, async () => {
-  expect.assertions(1);
-  reset();
-
   const arr: number[] = [];
   store.subscribers = {
     ...store.subscribers,

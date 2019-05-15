@@ -6,7 +6,8 @@ import store from '~/store';
 
 jest.mock('child_process');
 const _spawn: any = __spawn;
-const reset = (): void => {
+
+beforeEach(() => {
   _reset();
   _spawn.mockReset();
   _spawn.mockImplementation(() => ({
@@ -14,11 +15,9 @@ const reset = (): void => {
       if (ev === 'close') cb(0);
     })
   }));
-};
+});
 
-test(`Calls node spawn, returns child process and promise`, async () => {
-  expect.assertions(5);
-  reset();
+test(`Calls node spawn, returns child process and promise`, () => {
   const obj = spawn('echo', ['1'], { stdio: 'ignore' });
 
   expect(_spawn).toBeCalledWith('echo', ['1'], { stdio: 'ignore' });
@@ -30,17 +29,12 @@ test(`Calls node spawn, returns child process and promise`, async () => {
   expect(isPromise(promise)).toBe(true);
 });
 
-test(`Sets defaults for optional params`, async () => {
-  expect.assertions(1);
-  reset();
-
+test(`Sets defaults for optional params`, () => {
   spawn('echo');
   expect(_spawn).toBeCalledWith('echo', [], {});
 });
 
 test(`Adds processes to store and sets running to false and resolves on exit code 0`, async () => {
-  expect.assertions(11);
-  reset();
   _spawn.mockImplementation(() => ({
     on: jest.fn((ev, cb) => {
       if (ev === 'close') wait(500).then(() => cb(0));
@@ -77,8 +71,6 @@ test(`Adds processes to store and sets running to false and resolves on exit cod
 });
 
 test(`Rejects on error`, async () => {
-  expect.assertions(1);
-  reset();
   const err = Error();
   _spawn.mockImplementation(() => ({
     on: jest.fn((ev, cb) => {
@@ -92,8 +84,6 @@ test(`Rejects on error`, async () => {
 });
 
 test(`Rejects on unknown signal`, async () => {
-  expect.assertions(1);
-  reset();
   _spawn.mockImplementation(() => ({
     on: jest.fn((ev, cb) => {
       if (ev === 'close') cb(undefined, 'UNKNOWN_SIGNAL');
@@ -106,8 +96,6 @@ test(`Rejects on unknown signal`, async () => {
 });
 
 test(`Rejects on exit code 1`, async () => {
-  expect.assertions(1);
-  reset();
   _spawn.mockImplementation(() => ({
     on: jest.fn((ev, cb) => {
       if (ev === 'close') cb(1);

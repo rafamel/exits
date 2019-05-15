@@ -3,6 +3,11 @@ import reset, { populateProcesses as populate } from '../reset-store';
 import killWait from '~/utils/kill-wait';
 import { wait } from 'promist';
 
+beforeEach(() => {
+  reset();
+  populate();
+});
+
 const implementation = async (ev: string, cb: any): Promise<void> => {
   if (ev === 'close') {
     await wait(750);
@@ -11,9 +16,6 @@ const implementation = async (ev: string, cb: any): Promise<void> => {
 };
 
 test(`Returns immediately when spawned.wait = 'none'`, async () => {
-  expect.assertions(1);
-  reset();
-  populate();
   store.options.spawned.wait = 'none';
 
   let res;
@@ -23,9 +25,6 @@ test(`Returns immediately when spawned.wait = 'none'`, async () => {
 });
 
 test(`Returns immediately when there are no currently running processes`, async () => {
-  expect.assertions(1);
-  reset();
-  populate();
   store.options.spawned.wait = 'all';
   store.processes.foo.running = false;
   store.processes.bar.running = false;
@@ -38,9 +37,6 @@ test(`Returns immediately when there are no currently running processes`, async 
 });
 
 test(`Returns immediately when there are no running bind processes for spawned.wait = 'bind'`, async () => {
-  expect.assertions(1);
-  reset();
-  populate();
   store.options.spawned.wait = 'bind';
   store.processes.foo.opts.detached = true;
   store.processes.bar.running = false;
@@ -53,9 +49,6 @@ test(`Returns immediately when there are no running bind processes for spawned.w
 });
 
 test(`Returns immediately when there are no running detached processes for spawned.wait = 'detached'`, async () => {
-  expect.assertions(1);
-  reset();
-  populate();
   store.options.spawned.wait = 'detached';
   store.processes.foo.opts.detached = true;
   store.processes.foo.running = false;
@@ -67,9 +60,6 @@ test(`Returns immediately when there are no running detached processes for spawn
 });
 
 test(`Returns immediately when there are no running detached processes for spawned.wait = 'detached'`, async () => {
-  expect.assertions(1);
-  reset();
-  populate();
   store.options.spawned.wait = 'detached';
   store.processes.foo.opts.detached = true;
   store.processes.foo.running = false;
@@ -81,16 +71,11 @@ test(`Returns immediately when there are no running detached processes for spawn
 });
 
 test(`Waits for processes to close`, async () => {
-  expect.assertions(2);
-  reset();
-  populate();
   store.options.spawned.wait = 'bind';
   store.options.spawned.sigterm = 5000;
-  // @ts-ignore
-  store.processes.foo.ps.on.mockImplementation(implementation);
+  (store.processes.foo.ps.on as any).mockImplementation(implementation);
   store.processes.bar.running = false;
-  // @ts-ignore
-  store.processes.baz.ps.on.mockImplementation(implementation);
+  (store.processes.baz.ps.on as any).mockImplementation(implementation);
 
   let res;
   killWait().then(() => (res = true));
@@ -102,18 +87,13 @@ test(`Waits for processes to close`, async () => {
 });
 
 test(`Sends SIGTERM if not closed`, async () => {
-  expect.assertions(6);
-  reset();
-  populate();
   store.options.spawned.wait = 'bind';
   store.options.spawned.sigterm = 1500;
   store.options.spawned.sigkill = 5000;
-  // @ts-ignore
-  store.processes.foo.ps.on.mockImplementation(implementation);
+  (store.processes.foo.ps.on as any).mockImplementation(implementation);
   store.processes.bar.running = false;
   let cb = (): void => {};
-  // @ts-ignore
-  store.processes.baz.ps.on.mockImplementation((_, _cb) => {
+  (store.processes.baz.ps.on as any).mockImplementation((_: any, _cb: any) => {
     cb = _cb;
   });
 
@@ -135,18 +115,13 @@ test(`Sends SIGTERM if not closed`, async () => {
 });
 
 test(`Sends SIGKILL if not closed`, async () => {
-  expect.assertions(6);
-  reset();
-  populate();
   store.options.spawned.wait = 'bind';
   store.options.spawned.sigterm = null;
   store.options.spawned.sigkill = 1500;
-  // @ts-ignore
-  store.processes.foo.ps.on.mockImplementation(implementation);
+  (store.processes.foo.ps.on as any).mockImplementation(implementation);
   store.processes.bar.running = false;
   let cb = (): void => {};
-  // @ts-ignore
-  store.processes.baz.ps.on.mockImplementation((_, _cb) => {
+  (store.processes.baz.ps.on as any).mockImplementation((_: any, _cb: any) => {
     cb = _cb;
   });
 
@@ -168,17 +143,12 @@ test(`Sends SIGKILL if not closed`, async () => {
 });
 
 test(`Doesn't send signals if null`, async () => {
-  expect.assertions(3);
-  reset();
-  populate();
   store.options.spawned.wait = 'bind';
   store.options.spawned.sigterm = null;
   store.options.spawned.sigkill = null;
-  // @ts-ignore
-  store.processes.foo.ps.on.mockImplementation(implementation);
+  (store.processes.foo.ps.on as any).mockImplementation(implementation);
   store.processes.bar.running = false;
-  // @ts-ignore
-  store.processes.baz.ps.on.mockImplementation(implementation);
+  (store.processes.baz.ps.on as any).mockImplementation(implementation);
 
   let res;
   killWait().then(() => (res = true));

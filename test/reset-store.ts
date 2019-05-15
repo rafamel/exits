@@ -6,22 +6,19 @@ export const cloned = deep({ ...store, process: null });
 export function populateProcesses(): void {
   store.processes = {
     foo: {
-      // @ts-ignore
-      ps: { on: jest.fn(), kill: jest.fn() },
+      ps: { on: jest.fn(), kill: jest.fn() } as any,
       opts: {},
       triggered: false,
       running: true
     },
     bar: {
-      // @ts-ignore
-      ps: { on: jest.fn(), kill: jest.fn() },
+      ps: { on: jest.fn(), kill: jest.fn() } as any,
       opts: {},
       triggered: false,
       running: true
     },
     baz: {
-      // @ts-ignore
-      ps: { on: jest.fn(), kill: jest.fn() },
+      ps: { on: jest.fn(), kill: jest.fn() } as any,
       opts: {},
       triggered: false,
       running: true

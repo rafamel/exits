@@ -4,8 +4,9 @@ import { options } from '~/index';
 import logger from '~/utils/logger';
 import { IOptions } from '~/types';
 
+beforeEach(reset);
+
 test(`preserves options`, () => {
-  reset();
   options({});
   expect(store.options).toEqual(cloned.options);
 
@@ -15,8 +16,6 @@ test(`preserves options`, () => {
 });
 
 test(`writes options`, () => {
-  reset();
-
   const obj: Partial<IOptions> = { logger: 'debug', resolver: () => {} };
   options(obj);
 
@@ -24,8 +23,6 @@ test(`writes options`, () => {
 });
 
 test(`sets logger level`, () => {
-  reset();
-
   options({ logger: 'debug' });
   expect(logger.getLevel()).toBe(1);
   options({ logger: 'warn' });
@@ -33,8 +30,6 @@ test(`sets logger level`, () => {
 });
 
 test(`writes spawned options`, () => {
-  reset();
-
   const obj: Partial<IOptions> = {
     logger: 'error',
     spawned: { signals: 'all', wait: 'none', sigterm: 4555 }

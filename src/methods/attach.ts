@@ -26,31 +26,31 @@ export const handlers = {
   }
 };
 
-export function attach({
-  signal = true,
-  exception = true,
-  rejection = true,
-  exit = true
-}: Partial<IAttach> = {}): void {
-  const { state, process } = store;
+export function attach(options: Partial<IAttach> = {}): void {
+  const opts: IAttach = Object.assign(
+    { signal: true, exception: true, rejection: true, exit: true },
+    options
+  );
 
+  const { state, process } = store;
   const update: Partial<IAttach> = {};
-  if (signal && !state.attached.signal) {
+
+  if (opts.signal && !state.attached.signal) {
     logger.debug('Attach to signal: ' + SIGNALS.join(', '));
     update.signal = true;
     SIGNALS.forEach((sig: any) => process.on(sig, handlers.signal));
   }
-  if (exception && !state.attached.exception) {
+  if (opts.exception && !state.attached.exception) {
     logger.debug('Attach to exception');
     update.exception = true;
     process.on('uncaughtException', handlers.exception);
   }
-  if (rejection && !state.attached.rejection) {
+  if (opts.rejection && !state.attached.rejection) {
     logger.debug('Attach to rejection');
     update.rejection = true;
     process.on('unhandledRejection', handlers.rejection);
   }
-  if (exit && !state.attached.exit) {
+  if (opts.exit && !state.attached.exit) {
     logger.debug('Attach to exit (beforeExit)');
     update.exit = true;
     process.on('beforeExit', handlers.exit);
@@ -61,31 +61,31 @@ export function attach({
   }
 }
 
-export function unattach({
-  signal = true,
-  exception = true,
-  rejection = true,
-  exit = true
-}: Partial<IAttach> = {}): void {
-  const { state, process } = store;
+export function unattach(options: Partial<IAttach> = {}): void {
+  const opts: IAttach = Object.assign(
+    { signal: true, exception: true, rejection: true, exit: true },
+    options
+  );
 
+  const { state, process } = store;
   const update: Partial<IAttach> = {};
-  if (signal && state.attached.signal) {
+
+  if (opts.signal && state.attached.signal) {
     logger.debug('Unattach from signal: ' + SIGNALS.join(', '));
     update.signal = false;
     SIGNALS.forEach((sig: any) => process.removeListener(sig, handlers.signal));
   }
-  if (exception && state.attached.exception) {
+  if (opts.exception && state.attached.exception) {
     logger.debug('Unattach from exception');
     update.exception = false;
     process.removeListener('uncaughtException', handlers.exception);
   }
-  if (rejection && state.attached.rejection) {
+  if (opts.rejection && state.attached.rejection) {
     logger.debug('Unattach from rejection');
     update.rejection = false;
     process.removeListener('unhandledRejection', handlers.rejection);
   }
-  if (exit && state.attached.exit) {
+  if (opts.exit && state.attached.exit) {
     logger.debug('Unattach from exit (beforeExit)');
     update.exit = false;
     process.removeListener('beforeExit', handlers.exit);

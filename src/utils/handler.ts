@@ -1,5 +1,5 @@
 import logger from '~/utils/logger';
-import { TSignal } from '~/types';
+import { TSignal, TExitType } from '~/types';
 import { unattach } from '~/methods/attach';
 import store from '~/store';
 import setState from '~/utils/set-state';
@@ -11,10 +11,7 @@ export default handler;
 function handler(type: 'signal', arg: TSignal): Promise<void>;
 function handler(type: 'exception' | 'rejection', arg: Error): Promise<void>;
 function handler(type: 'exit', arg: number): Promise<void>;
-async function handler(
-  type: 'signal' | 'exception' | 'rejection' | 'exit',
-  arg: any
-): Promise<void> {
+async function handler(type: TExitType, arg: any): Promise<void> {
   try {
     if (store.state.triggered) return;
 
@@ -31,7 +28,7 @@ async function handler(
       const element = store.stack.shift();
       if (element && element.on[type]) {
         try {
-          await element.cb(type, arg, context);
+          await element.fn(type, arg, context);
         } catch (e) {
           logger.error(e);
         }

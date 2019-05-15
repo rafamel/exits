@@ -5,17 +5,16 @@ import logger from '~/utils/logger';
 logger.setLevel('silent');
 
 const reset = (): void => {
-  // @ts-ignore
   store.process = {
     pid: 777,
     kill: jest.fn(),
-    // @ts-ignore
     exit: jest.fn()
-  };
+  } as any;
 };
 
+beforeEach(reset);
+
 test(`kills on signal`, () => {
-  reset();
   resolver('signal', 'SIGINT');
   expect(store.process.kill).toHaveBeenCalledTimes(1);
   expect(store.process.kill).toHaveBeenCalledWith(777, 'SIGINT');
@@ -27,22 +26,18 @@ test(`kills on signal`, () => {
 });
 
 test(`exits on exit`, () => {
-  reset();
   resolver('exit', 0);
   expect(store.process.exit).toHaveBeenCalledTimes(1);
   expect(store.process.exit).toHaveBeenCalledWith(0);
 
   reset();
-  // @ts-ignore
-  resolver('exit', '1');
+  resolver('exit', '1' as any);
   expect(store.process.exit).toHaveBeenCalledTimes(1);
   expect(store.process.exit).toHaveBeenCalledWith(1);
 });
 
 test(`does nothing on bad type`, () => {
-  reset();
-  // @ts-ignore
-  resolver('badtype', 0);
+  resolver('badtype' as any, 0);
   expect(store.process.kill).toHaveBeenCalledTimes(0);
   expect(store.process.exit).toHaveBeenCalledTimes(0);
 });

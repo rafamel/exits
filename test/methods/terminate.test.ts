@@ -11,13 +11,15 @@ const resetHandler = (): void => {
   handler.mockImplementation(() => Promise.resolve('foo'));
 };
 
+beforeEach(() => {
+  resetStore();
+  resetHandler();
+});
+
 describe(`signal`, () => {
   test(`calls handler with signal when attached to signal`, async () => {
-    expect.assertions(6);
-    resetStore();
     store.state.attached.signal = true;
 
-    resetHandler();
     const res1 = await terminate('signal', 'SIGINT');
     expect(res1).toBe('foo');
     expect(handler).toBeCalledTimes(1);
@@ -30,9 +32,6 @@ describe(`signal`, () => {
     expect(handler).toBeCalledWith('signal', 'SIGHUP');
   });
   test(`calls resolver when not attached to signal`, async () => {
-    expect.assertions(8);
-    resetHandler();
-    resetStore();
     store.state.attached.signal = false;
     const called: any[] = [];
     store.options.resolver = (...args) => {
@@ -56,11 +55,8 @@ describe(`signal`, () => {
 
 describe(`exception`, () => {
   test(`calls handler with error when attached to exception`, async () => {
-    expect.assertions(3);
-    resetStore();
     store.state.attached.exception = true;
 
-    resetHandler();
     const err = Error();
     const res = await terminate('exception', err);
     expect(res).toBe('foo');
@@ -68,9 +64,6 @@ describe(`exception`, () => {
     expect(handler).toBeCalledWith('exception', err);
   });
   test(`calls resolver when not attached to exception`, async () => {
-    expect.assertions(4);
-    resetHandler();
-    resetStore();
     store.state.attached.exception = false;
     const called: any[] = [];
     store.options.resolver = (...args) => {
@@ -89,11 +82,8 @@ describe(`exception`, () => {
 
 describe(`rejection`, () => {
   test(`calls handler with error when attached to rejection`, async () => {
-    expect.assertions(3);
-    resetStore();
     store.state.attached.rejection = true;
 
-    resetHandler();
     const err = Error();
     const res = await terminate('rejection', err);
     expect(res).toBe('foo');
@@ -101,9 +91,6 @@ describe(`rejection`, () => {
     expect(handler).toBeCalledWith('rejection', err);
   });
   test(`calls resolver when not attached to rejection`, async () => {
-    expect.assertions(4);
-    resetHandler();
-    resetStore();
     store.state.attached.rejection = false;
     const called: any[] = [];
     store.options.resolver = (...args) => {
@@ -122,11 +109,8 @@ describe(`rejection`, () => {
 
 describe(`exit`, () => {
   test(`calls handler with exit code when attached to exit`, async () => {
-    expect.assertions(6);
-    resetStore();
     store.state.attached.exit = true;
 
-    resetHandler();
     const res1 = await terminate('exit', 0);
     expect(res1).toBe('foo');
     expect(handler).toBeCalledTimes(1);
@@ -139,9 +123,6 @@ describe(`exit`, () => {
     expect(handler).toBeCalledWith('exit', 1);
   });
   test(`calls resolver when not attached to exit`, async () => {
-    expect.assertions(8);
-    resetHandler();
-    resetStore();
     store.state.attached.exit = false;
     const called: any[] = [];
     store.options.resolver = (...args) => {
@@ -165,9 +146,6 @@ describe(`exit`, () => {
 
 describe(`unknown type`, () => {
   test(`calls resolver when not attached`, async () => {
-    expect.assertions(4);
-    resetHandler();
-    resetStore();
     store.state.attached = {
       signal: false,
       exception: false,
@@ -180,17 +158,13 @@ describe(`unknown type`, () => {
       return Promise.resolve('bar');
     };
 
-    // @ts-ignore
-    const res = await terminate('unknown_type', 0);
+    const res = await terminate('unknown_type' as any, 0);
     expect(handler).not.toBeCalled();
     expect(res).toBe('bar');
     expect(called).toHaveLength(1);
     expect(called[0]).toEqual(['unknown_type', 0]);
   });
   test(`calls resolver when attached`, async () => {
-    expect.assertions(4);
-    resetHandler();
-    resetStore();
     store.state.attached = {
       signal: true,
       exception: true,
@@ -203,8 +177,7 @@ describe(`unknown type`, () => {
       return Promise.resolve('bar');
     };
 
-    // @ts-ignore
-    const res = await terminate('unknown_type', 0);
+    const res = await terminate('unknown_type' as any, 0);
     expect(handler).not.toBeCalled();
     expect(res).toBe('bar');
     expect(called).toHaveLength(1);

@@ -2,9 +2,9 @@ import reset from '../reset-store';
 import store from '~/store';
 import { on } from '~/index';
 
-test(`adds subscribers`, () => {
-  reset();
+beforeEach(reset);
 
+test(`adds subscribers`, () => {
   const cbs = [() => {}, () => {}, () => {}];
   on('attached', cbs[0]);
   on('triggered', cbs[1]);
@@ -16,8 +16,6 @@ test(`adds subscribers`, () => {
 });
 
 test(`adds multiple subscribers`, () => {
-  reset();
-
   const cbs = Array(9)
     .fill(0)
     .map(() => () => {});
@@ -38,8 +36,5 @@ test(`adds multiple subscribers`, () => {
 });
 
 test(`throws on bad event`, () => {
-  reset();
-
-  // @ts-ignore
-  expect(() => on('nonevent', () => {})).toThrowError();
+  expect(() => on('nonevent' as any, () => {})).toThrowError();
 });

@@ -1,12 +1,8 @@
-import { IAttach, TSignal } from '~/types';
+import { IAttach, TFn } from '~/types';
 import store from '~/store';
 
 export default function add(
-  cb: (
-    type: 'signal' | 'exception' | 'rejection' | 'exit',
-    arg: TSignal | Error | number,
-    context: any
-  ) => Promise<any> | any,
+  fn: TFn,
   priority?: number | null,
   options?: Partial<IAttach>
 ): () => void {
@@ -16,7 +12,7 @@ export default function add(
     options
   );
 
-  const el = { cb, priority, on: opts };
+  const el = { fn, priority, on: opts };
 
   for (let i = 0; i < store.stack.length; i++) {
     if (priority <= store.stack[i].priority) {
@@ -33,7 +29,7 @@ export default function add(
 
   function remove(): void {
     for (let i = 0; i < store.stack.length; i++) {
-      if (store.stack[i].cb === cb) {
+      if (store.stack[i].fn === fn) {
         store.stack = store.stack.slice(0, i).concat(store.stack.slice(i + 1));
       }
     }

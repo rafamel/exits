@@ -5,13 +5,20 @@ import { SpawnOptions, ChildProcess } from 'child_process';
  */
 export type TLogger = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'silent';
 
+export type TExitType = 'signal' | 'exception' | 'rejection' | 'exit';
+
+export type TSignal = 'SIGINT' | 'SIGHUP' | 'SIGQUIT' | 'SIGTERM';
+
+export type TFn = (
+  type: TExitType,
+  arg: TSignal | Error | number,
+  context: any
+) => Promise<any> | any;
+
 export interface IOptions {
   logger: TLogger;
   spawned: ISpawned;
-  resolver(
-    type: 'signal' | 'exception' | 'rejection' | 'exit',
-    arg: TSignal | Error | number
-  ): any;
+  resolver(type: TExitType, arg: TSignal | Error | number): any;
 }
 
 export interface ISpawned {
@@ -21,10 +28,8 @@ export interface ISpawned {
   sigkill?: null | number;
 }
 
-export type TSignal = 'SIGINT' | 'SIGHUP' | 'SIGQUIT' | 'SIGTERM';
-
 export type TTriggered = null | {
-  type: 'signal' | 'exception' | 'rejection' | 'exit';
+  type: TExitType;
   arg: TSignal | Error | number;
 };
 
@@ -52,8 +57,8 @@ export interface IStore {
   stack: Array<{
     priority: number;
     on: IAttach;
-    cb(
-      type: 'signal' | 'exception' | 'rejection' | 'exit',
+    fn(
+      type: TExitType,
       arg: TSignal | Error | number,
       context: any
     ): Promise<void> | void;

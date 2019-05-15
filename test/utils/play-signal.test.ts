@@ -2,19 +2,21 @@ import store from '~/store';
 import reset, { populateProcesses as populate } from '../reset-store';
 import playSignal from '~/utils/play-signal';
 
+beforeEach(() => {
+  reset();
+  populate();
+});
+
 describe(`spawned.signals = 'none'`, () => {
   test(`returns true`, () => {
-    reset();
-    populate();
     store.options.spawned.signals = 'none';
 
     expect(playSignal('SIGQUIT')).toBe(true);
   });
 });
+
 describe(`spawned.signals = 'detached'`, () => {
   test(`returns true when there are no detached processes`, () => {
-    reset();
-    populate();
     store.options.spawned.signals = 'detached';
 
     expect(playSignal('SIGHUP')).toBe(true);
@@ -26,8 +28,6 @@ describe(`spawned.signals = 'detached'`, () => {
     expect(store.processes.baz.triggered).toBe(false);
   });
   test(`returns true when there are no running/untriggered detached processes`, () => {
-    reset();
-    populate();
     store.options.spawned.signals = 'detached';
 
     store.processes.foo.opts.detached = true;
@@ -43,8 +43,6 @@ describe(`spawned.signals = 'detached'`, () => {
     expect(store.processes.bar.triggered).toBe(false);
   });
   test(`returns false and kills with signal when there are running detached processes`, () => {
-    reset();
-    populate();
     store.options.spawned.signals = 'detached';
 
     store.processes.foo.opts.detached = true;
@@ -63,8 +61,6 @@ describe(`spawned.signals = 'detached'`, () => {
 });
 describe(`spawned.signals = 'bind'`, () => {
   test(`returns true when there are no bind processes`, () => {
-    reset();
-    populate();
     store.options.spawned.signals = 'bind';
 
     store.processes.foo.opts.detached = true;
@@ -77,8 +73,6 @@ describe(`spawned.signals = 'bind'`, () => {
     expect(store.processes.baz.triggered).toBe(false);
   });
   test(`returns true when there are no running/untriggered bind processes`, () => {
-    reset();
-    populate();
     store.options.spawned.signals = 'bind';
 
     store.processes.foo.running = false;
@@ -90,8 +84,6 @@ describe(`spawned.signals = 'bind'`, () => {
     expect(store.processes.baz.triggered).toBe(false);
   });
   test(`returns false when there are running/untriggered bind processes`, () => {
-    reset();
-    populate();
     store.options.spawned.signals = 'bind';
 
     store.processes.bar.opts.detached = true;

@@ -2,14 +2,14 @@ import { IOptions } from '~/types';
 import store from '~/store';
 import { setLevel } from '~/utils/logger';
 
-export default function options(opts: Partial<IOptions> = {}): void {
+export default function options(options: Partial<IOptions> = {}): void {
   store.options = {
     ...store.options,
-    ...opts,
+    ...options,
     spawned: {
       ...store.options.spawned,
-      ...(opts.spawned || {})
+      ...(options.spawned || {})
     }
   };
-  if (opts.logger) setLevel(opts.logger);
+  if (options.logger) setLevel(options.logger);
 }

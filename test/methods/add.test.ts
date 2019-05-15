@@ -10,7 +10,7 @@ test(`Adds element to store`, () => {
   add(el);
 
   expect(store.stack).toHaveLength(1);
-  expect(store.stack[0].cb).toBe(el);
+  expect(store.stack[0].fn).toBe(el);
 });
 
 test(`Adds with default values`, () => {
@@ -53,8 +53,8 @@ test(`Adds elements in reverse order`, () => {
   add(el2);
 
   expect(store.stack).toHaveLength(2);
-  expect(store.stack[0].cb).toBe(el2);
-  expect(store.stack[1].cb).toBe(el1);
+  expect(store.stack[0].fn).toBe(el2);
+  expect(store.stack[1].fn).toBe(el1);
 });
 
 test(`Adds elements in priority order`, () => {
@@ -76,7 +76,7 @@ test(`Adds elements in priority order`, () => {
   add(els[11], -5);
 
   expect(store.stack).toHaveLength(12);
-  expect(store.stack.map((x) => x.cb)).toEqual([
+  expect(store.stack.map((x) => x.fn)).toEqual([
     els[11],
     els[0],
     els[2],
@@ -113,7 +113,7 @@ test(`Removes elements`, () => {
   expect(store.stack).toHaveLength(6);
   c();
   expect(store.stack).toHaveLength(5);
-  expect(store.stack.map((x) => x.cb)).toEqual([
+  expect(store.stack.map((x) => x.fn)).toEqual([
     els[0],
     els[2],
     els[7],

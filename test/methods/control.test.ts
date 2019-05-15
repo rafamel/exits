@@ -3,10 +3,9 @@ import store from '~/store';
 import { control } from '~/index';
 import { wait } from 'promist';
 
-test(`finishes when state is not triggered`, async () => {
-  expect.assertions(1);
-  reset();
+beforeEach(reset);
 
+test(`finishes when state is not triggered`, async () => {
   const fn = control(function*() {
     let a = yield 1;
     a = yield Promise.resolve(a + 1);
@@ -18,9 +17,6 @@ test(`finishes when state is not triggered`, async () => {
 });
 
 test(`takes in same args`, async () => {
-  expect.assertions(1);
-  reset();
-
   const fn = control(function*(...args) {
     return args;
   });
@@ -29,11 +25,7 @@ test(`takes in same args`, async () => {
 });
 
 test(`Rejects and stops when state is triggered`, async () => {
-  expect.assertions(2);
-  reset();
-
-  // @ts-ignore
-  setTimeout(() => (store.state.triggered = {}), 500);
+  setTimeout(() => (store.state.triggered = {} as any), 500);
   const arr: boolean[] = [];
   const fn = control(function*() {
     let a = yield 1;
