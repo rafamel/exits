@@ -29,7 +29,6 @@ const store: IStore = {
     },
     resolver
   },
-  // tslint:disable-next-line object-literal-shorthand
   process: process,
   processes: {}
 };

@@ -16,7 +16,6 @@ export default function add(
   }: Partial<IAttach> = {}
 ): () => void {
   function remove(): void {
-    // tslint:disable-next-line no-shadowed-variable
     for (let i = 0; i < store.stack.length; i++) {
       if (store.stack[i].cb === cb) {
         store.stack = store.stack.slice(0, i).concat(store.stack.slice(i + 1));
