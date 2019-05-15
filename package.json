@@ -113,12 +113,12 @@
     "chalk": "^2.4.2",
     "cli-belt": "^0.3.0",
     "common-tags": "^1.8.0",
-    "errorish": "^0.3.0",
+    "errorish": "^0.4.0",
     "lodash.clonedeep": "^4.5.0",
     "loglevel": "^1.6.1",
     "npm-run-path": "^3.1.0",
     "pify": "^4.0.1",
-    "promist": "^0.5.2",
+    "promist": "^0.7.0",
     "uuid": "^3.3.2"
   },
   "husky": {
