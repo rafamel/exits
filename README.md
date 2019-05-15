@@ -16,7 +16,7 @@ If you find it useful, consider [starring the project](https://github.com/rafame
 
 `exits` can conditionally intercept signals (`'SIGINT'`, `'SIGHUP'`, `'SIGQUIT'`, `'SIGTERM'`), `uncaughtException`s, `unhandledRejection`s, or end of execution (`beforeExit`) on Node.
 
-The only instance in which it will not be able to complete work scheduled via [`add()`](#addcb-function-priority-number--null-opts-object-function) before end of execution is [if `process.exit()` or `SIGKILL` -meant to terminate the process forcefully- are explicitly called.](#forceful-process-termination)
+The only instance in which it will not be able to complete work scheduled via [`add()`](#addpriority-number--null--undefined-fn-function-options-object-function) before end of execution is [if `process.exit()` or `SIGKILL` -meant to terminate the process forcefully- are explicitly called.](#forceful-process-termination)
 
 It can also be used as an executable, allowing you to run a command after a previous one exits, regardless of the cause.
 
@@ -58,16 +58,16 @@ Examples:
 
 ## Programatic Usage
 
-* [`attach()`](#attachopts-object-void) starts listening to termination events.
-* [`unattach()`](#unattachopts-object-void) stops listening to termination events.
-* [`add()`](#addcb-function-priority-number--null-opts-object-function) adds and removes tasks to be run on listened to events before termination.
+* [`attach()`](#attachoptions-object-void) starts listening to termination events.
+* [`unattach()`](#unattachoptions-object-void) stops listening to termination events.
+* [`add()`](#addpriority-number--null--undefined-fn-function-options-object-function) adds and removes tasks to be run on listened to events before termination.
 * [`clear()`](#clear-void) removes all added tasks.
-* [`options()`](#optionsopts-object-void) sets `exits` options.
+* [`options()`](#optionsoptions-object-void) sets `exits` options.
 * [`state()`](#state-object) returns an *object* with the current `exits` state.
 * [`on()`](#onevent-string-cb-function-void) subscribes to state changes.
 * [`control()`](#controlfn-generator-promiseany) controls *async* execution flow in order to stop parallel execution on triggered termination events.
 * [`terminate()`](#terminatetype-string-arg-string--error--number-promisevoid) explicitly terminates execution while still waiting for `exits` tasks to finish.
-* [`spawn()`](#spawncmd-string-args-string-opts-object-object) safely handles execution of child processes.
+* [`spawn()`](#spawncmd-string-args-string-options-object-object) safely handles execution of child processes.
 
 ### Basic usage
 
@@ -97,11 +97,11 @@ add(async () => {
 });
 ```
 
-### `attach(opts?: object): void`
+### `attach(options?: object): void`
 
 Starts listening to termination events. By default, `attach()` will listen to all available events. Calling `attach()` several times will have no effect if a particular event is already being listened for.
 
-* `opts`: *Object, optional* with keys:
+* `options`: *Object, optional* with keys:
   * `signal`: *boolean;* default: `true`. Whether to listen to and intercept `'SIGINT'`, `'SIGHUP'`, `'SIGQUIT'`, and `'SIGTERM'` events.
   * `exception`: *boolean;* default: `true`. Whether to listen to and intercept `uncaughtException` (errors).
   * `rejection`: *boolean;* default: `true`. Whether to listen to and intercept `unhandledRejection` (unhandled promise rejections).
@@ -124,11 +124,11 @@ attach({ signal: false, rejection: false, exit: false });
 attach({ signal: false, exception: true, rejection: false, exit: false });
 ```
 
-### `unattach(opts?: object): void`
+### `unattach(options?: object): void`
 
 Stop listening to all or some termination events. By default, it will stop listening to all currently being listened to. It will only have effect if we are currently listening to some or all of the events passed. It will be automatically called when all tasks have run in order to allow for process exit.
 
-* `opts`:
+* `options`:
   * `signal`: *boolean;* default: `true`.
   * `exception`: *boolean;* default: `true`.
   * `rejection`: *boolean;* default: `true`.
@@ -144,17 +144,19 @@ unattach();
 unattach({ signal: false, rejection: false, exit: false });
 ```
 
-### `add(cb: function, priority?: number | null, opts?: object): function`
+### `add(priority: number | null | undefined, fn: function, options?: object): function`
 
-Adds a task to be run on [`attach()`ed](#attachopts-object-void) events. Returns a removal *function.*
+Adds a task to be run on [`attach()`ed](#attachoptions-object-void) events. Returns a removal *function.*
 
-* `cb`: *function* for the task to run on the `attach()`ed events, with signature (can be *async*): `(type: string, arg: any, context: any) => Promise<void> | void`:
+It can also be called without `priority`, with signature: `add(fn: function, options?: object): function`.
+
+* `priority`: *number | null | undefined;* default: `0`. For an equal priority index, tasks added via `add()` will execute serially, in reverse order of addition (LIFO). Tasks with a lower priority index will always execute first.
+* `fn`: *function* for the task to run on the `attach()`ed events, with signature (can be *async*): `(type: string, arg: any, context: any) => Promise<void> | void`:
   * if `type` is `'signal'`, `arg` will be any of `'SIGINT'`, `'SIGHUP'`, `'SIGQUIT'`, `'SIGTERM'`.
   * if `type` is either `'exception'` or `'rejection'`, `arg` will be an *Error*.
   * if `type` is `'exit'`, `arg` will be the exit code *number*.
   * `context` is an initially empty object that is passed to all tasks. Tasks can share state by mutating the object.
-* `priority`: *number | null;* default: `0`. For an equal priority, tasks added via `add()` will execute serially, in reverse order of addition (LIFO). Tasks with higher (larger) priority will always execute first.
-* `opts`: A task can be marked to apply only for some cases. This would allow, as an example, to only run certain tasks if the process throws an exception, others, if the process is terminated via signal, and others in all cases. It will only act for signals that have been `attach()`ed.
+* `options`: A task can be marked to apply only for some cases. This would allow, as an example, to only run certain tasks if the process throws an exception, others, if the process is terminated via signal, and others in all cases. It will only act for signals that have been `attach()`ed.
   * `signal`: *boolean;* default: `true`.
   * `exception`: *boolean;* default: `true`.
   * `rejection`: *boolean;* default: `true`.
@@ -179,7 +181,7 @@ remove();
 
 ### `clear(): void`
 
-Removes all tasks scheduled via [`add()`.](#addcb-function-priority-number--null-opts-object-function) If run inside a task, it will prevent any other following task from executing.
+Removes all tasks scheduled via [`add()`.](#addpriority-number--null--undefined-fn-function-options-object-function) If run inside a task, it will prevent any other following task from executing.
 
 ```javascript
 import { clear } from 'exits';
@@ -187,13 +189,13 @@ import { clear } from 'exits';
 clear();
 ```
 
-### `options(opts?: object): void`
+### `options(options?: object): void`
 
 Sets `exits` global options.
 
-* `opts`: *object,* with optional properties:
+* `options`: *object,* with optional properties:
   * `logger`: *string,* any of `'trace'`, `'debug'`, `'info'`, `'warn'`, `'error'`, `'silent'`. Sets `exits` logging level. Default: `'info'`.
-  * `spawned`: *object,* determines `exits` behavior in relation to spawned commands. See [`spawn()`.](#spawncmd-string-args-string-opts-object-object)
+  * `spawned`: *object,* determines `exits` behavior in relation to spawned commands. See [`spawn()`.](#spawncmd-string-args-string-options-object-object)
   * `resolver`: a [resolver *function*.](#resolver-function)
 
 ```javascript
@@ -210,7 +212,7 @@ Returns an *object* with the current `exits` state. It will not be mutated on up
 
 The returned *object* will have properties:
 
-* `attached`: Which events was `exits` attached to via [`attach()`.](#attachopts-object-void) *object,* with keys:
+* `attached`: Which events was `exits` attached to via [`attach()`.](#attachoptions-object-void) *object,* with keys:
   * `signal`: *boolean*
   * `exception`: *boolean*
   * `rejection`: *boolean*
@@ -249,7 +251,7 @@ Initial state:
 Subscribes to [`state`](#state-object) changes.
 
 * `event`: *string,* any of:
-  * `'attached'`: `cb` will be called whenever the [`attach()`](#attachopts-object-void) or [`unattach()`](#unattachopts-object-void) methods are called and successfully attach or unattach from one or more events.
+  * `'attached'`: `cb` will be called whenever the [`attach()`](#attachoptions-object-void) or [`unattach()`](#unattachoptions-object-void) methods are called and successfully attach or unattach from one or more events.
   * `'triggered'`: `cb` will be called when `exits` tasks are first started.
   * `'done'`: `cb` will be called once all `exits` tasks complete.
 * `cb`: *function,* if *asynchronous,* they will execute in parallel and will be waited for before or after `exits` tasks execute, depending on the nature of the `event`. For convenience, it receives the [`state()` method](#state-object) as an argument in order to recover the updated state if needed.
@@ -308,13 +310,15 @@ terminate('exit', 1);
 terminate('exception', Error('some error'));
 ```
 
-### `spawn(cmd: string, args?: string[], opts?: object): object`
+### `spawn(cmd: string, args?: string[], options?: object): object`
 
 Spawning child processes in a way that behaves coherently with `exits` tasks is tricky. To simplify it, even while still offering a relatively low level api, `spawn()` is available.
 
+It can also be called without `args`, with signature: `spawn(cmd: string, options?: object): object`.
+
 * `cmd`: *string,* a command to run.
 * `args`: *string array, optional,* arguments for `cmd`.
-* `opts`: *object, optional,* [*Node.js'* `child_process.spawn` options.](https://nodejs.org/docs/latest-v8.x/api/child_process.html#child_process_child_process_spawn_command_args_options)
+* `options`: *object, optional,* [*Node.js'* `child_process.spawn` options.](https://nodejs.org/docs/latest-v8.x/api/child_process.html#child_process_child_process_spawn_command_args_options)
 
 `spawn()` returns an *object,* with keys:
 
@@ -334,7 +338,7 @@ import { spawn } from 'exits';
 const { ps, promise } = spawn('echo', ['hello'], { stdio: 'inherit' });
 ```
 
-The way we deal with spawned processes and `exits` tasks initialization is defined through `spawned` [`options()`:](#optionsopts-object-void).
+The way we deal with spawned processes and `exits` tasks initialization is defined through `spawned` [`options()`:](#optionsoptions-object-void).
 
 * `signals`: *string,* whether to stop listening for `'SIGINT'`, `'SIGHUP'`, `'SIGQUIT'` and `'SIGTERM'` signals on the main process while there is a spawned process running. Can be any of:
   * `'all'`: stop listening to signals if there is any spawned process running.
@@ -366,9 +370,9 @@ options({
 
 ### Resolver function
 
-The resolver function gets called whenever `exits` tasks finalize in order to terminate the current process in a way that is coherent with the first event that caused the tasks to initialize. Hence, it takes two arguments: `type` and `arg`, in the same fashion as the [`add()` `cb`.](#addcb-function-priority-number--null-opts-object-function)
+The resolver function gets called whenever `exits` tasks finalize in order to terminate the current process in a way that is coherent with the first event that caused the tasks to initialize. Hence, it takes two arguments: `type` and `arg`, in the same fashion as the [`add()` `cb`.](#addpriority-number--null--undefined-fn-function-options-object-function)
 
-You can switch this function globally by passing a `resolver` key to the *object* taken by [`options()`.](#optionsopts-object-void)
+You can switch this function globally by passing a `resolver` key to the *object* taken by [`options()`.](#optionsoptions-object-void)
 
 **Simplified default implementation:**
 
