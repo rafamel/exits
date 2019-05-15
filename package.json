@@ -42,6 +42,7 @@
     "docs": "kpo docs --",
     "changelog": "kpo changelog --",
     "update": "kpo update --",
+    "outdated": "kpo outdated --",
     "clean": "kpo clean --",
     "clean.top": "kpo clean.top --",
     "clean.modules": "kpo clean.modules --",

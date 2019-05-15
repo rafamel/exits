@@ -1,5 +1,5 @@
 // prettier-ignore
-const { series, parallel, ensure, line, json, log, confirm, rm, remove, copy, kpo, silent } = require('kpo');
+const { series, parallel, ensure, line, json, log, confirm, rm, remove, kpo, silent } = require('kpo');
 const path = require('path');
 const bump = require('conventional-recommended-bump');
 const { promisify } = require('util');
@@ -21,7 +21,7 @@ module.exports.scripts = {
   build: {
     default: kpo`validate build.force`,
     force: series.env('kpo build.pack build.types', { NODE_ENV: 'production' }),
-    $pack: [ensure`./pkg`, 'pack build', copy(['.npmignore'], './pkg')].concat(
+    $pack: [ensure`./pkg`, 'pack build'].concat(
       vars.node && [
         line`babel src --out-dir ./pkg/dist-node
         --extensions ${vars.dotExt} --source-maps inline`,
@@ -40,21 +40,25 @@ module.exports.scripts = {
     ]
   },
   commit: series.env('git-cz', { COMMITIZEN: '#' }),
-  semantic: () =>
+  semantic: ([type]) =>
     promisify(bump)({ preset: 'angular' }).then(({ reason, releaseType }) => {
-      log.fn`Recommended version bump is: ${releaseType}\n    ${reason}`;
+      type ? log.fn`\nVersion bump: ${type}` : log.fn``;
+      log.fn`Recommended version bump: ${releaseType}\n    ${reason}`;
       return confirm({
         no: Error(),
-        yes: series.env(`npm version ${releaseType}`, { SEMANTIC: '#' })
+        yes: series.env(`npm version ${type ? '' : releaseType}`, {
+          SEMANTIC: '#'
+        })
       });
     }),
   release: [
+    series('npm publish --dry-run', { cwd: './pkg' }),
+    confirm({ no: Error() }),
     series('npm publish', { cwd: './pkg' }),
-    ['git push', 'git push --tags']
+    series(['git push', 'git push --tags'], { args: [] })
   ],
   watch: {
-    default: line`onchange ./src/**/*.{${vars.ext}}
-      --initial --kill -- kpo watch.task`,
+    default: 'onchange ./src --initial --kill -- kpo watch.task',
     $task: [
       log`\x1Bc⚡`,
       parallel(['kpo build.pack build.types', 'kpo lint'], {
@@ -66,7 +70,7 @@ module.exports.scripts = {
   fix: {
     default: kpo`fix.format fix.scripts`,
     format: `prettier --write ./**/*.{${vars.ext},json,scss}`,
-    scripts: kpo`:raise --confirm --fail`
+    scripts: kpo`:raise --purge --confirm --fail`
   },
   types: project.typescript && 'tsc --noEmit --emitDeclarationOnly false',
   lint: {
@@ -79,8 +83,7 @@ module.exports.scripts = {
     default: kpo`lint types test.force`,
     force: series.env('jest', { NODE_ENV: 'test' }),
     watch: {
-      default: line`onchange ./{src,test}/**/*.{${vars.ext}}
-      --initial --kill -- kpo test.watch.task`,
+      default: 'onchange ./{src,test} --initial --kill -- kpo test.watch.task',
       $task: [log`\x1Bc⚡`, kpo`test`]
     }
   },
@@ -91,6 +94,7 @@ module.exports.scripts = {
   ],
   changelog: 'conventional-changelog -p angular -i CHANGELOG.md -s -r 0',
   update: ['npm update', 'npm outdated'],
+  outdated: 'npm outdated',
   clean: {
     default: kpo`clean.top clean.modules`,
     top: remove(
