@@ -5,18 +5,32 @@ import { SIGNALS } from '~/constants';
 import uuid from 'uuid/v4';
 import store from '~/store';
 
-export default function spawn(
+export default spawn;
+
+function spawn(
   cmd: string,
-  args: string[] = [],
-  opts: SpawnOptions = {}
+  args?: string[],
+  options?: SpawnOptions
+): { ps: ChildProcess; promise: Promise<TSignal | null> };
+function spawn(
+  cmd: string,
+  options?: SpawnOptions
+): { ps: ChildProcess; promise: Promise<TSignal | null> };
+function spawn(
+  cmd: string,
+  ...args: any[]
 ): { ps: ChildProcess; promise: Promise<TSignal | null> } {
-  logger.debug('Running: ' + [cmd].concat(args).join(' '));
+  const hasArgs = Array.isArray(args[0]);
+  const inner: string[] = hasArgs ? args[0] : [];
+  const options: SpawnOptions = (hasArgs ? args[1] : args[0]) || {};
+
+  logger.debug('Running: ' + [cmd].concat(inner).join(' '));
 
   const id = uuid();
-  const ps = _spawn(cmd, args, opts);
+  const ps = _spawn(cmd, inner, options);
   store.processes[id] = {
     ps,
-    opts,
+    opts: options,
     running: true,
     triggered: false
   };

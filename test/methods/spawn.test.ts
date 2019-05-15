@@ -20,7 +20,7 @@ beforeEach(() => {
 test(`Calls node spawn, returns child process and promise`, () => {
   const obj = spawn('echo', ['1'], { stdio: 'ignore' });
 
-  expect(_spawn).toBeCalledWith('echo', ['1'], { stdio: 'ignore' });
+  expect(_spawn).toHaveBeenCalledWith('echo', ['1'], { stdio: 'ignore' });
   expect(obj).toHaveProperty('ps');
   expect(obj).toHaveProperty('promise');
 
@@ -29,9 +29,20 @@ test(`Calls node spawn, returns child process and promise`, () => {
   expect(isPromise(promise)).toBe(true);
 });
 
-test(`Sets defaults for optional params`, () => {
+test(`Calls node spawn w/ arguments`, () => {
   spawn('echo');
-  expect(_spawn).toBeCalledWith('echo', [], {});
+  expect(_spawn).toHaveBeenNthCalledWith(1, 'echo', [], {});
+
+  spawn('echo', ['--foo', 'bar']);
+  expect(_spawn).toHaveBeenNthCalledWith(2, 'echo', ['--foo', 'bar'], {});
+
+  spawn('echo', { stdio: 'ignore' });
+  expect(_spawn).toHaveBeenNthCalledWith(3, 'echo', [], { stdio: 'ignore' });
+
+  spawn('echo', ['--foo', 'bar'], { stdio: 'ignore' });
+  expect(_spawn).toHaveBeenNthCalledWith(4, 'echo', ['--foo', 'bar'], {
+    stdio: 'ignore'
+  });
 });
 
 test(`Adds processes to store and sets running to false and resolves on exit code 0`, async () => {
