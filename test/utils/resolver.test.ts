@@ -11,8 +11,14 @@ const reset = (): void => {
     exit: jest.fn()
   } as any;
 };
+const mocks: { [key: string]: jest.Mock } = {
+  setImmediate: global.setImmediate = jest.fn()
+};
 
-beforeEach(reset);
+beforeEach(() => {
+  reset();
+  Object.values(mocks).forEach((mock) => mock.mockClear());
+});
 
 test(`kills on signal`, () => {
   resolver('signal', 'SIGINT');
@@ -34,6 +40,20 @@ test(`exits on exit`, () => {
   resolver('exit', '1' as any);
   expect(store.process.exit).toHaveBeenCalledTimes(1);
   expect(store.process.exit).toHaveBeenCalledWith(1);
+});
+
+test(`throws on exception, rejection`, () => {
+  resolver('exception', Error('Foo'));
+  expect(mocks.setImmediate).toHaveBeenCalledTimes(1);
+  expect(
+    mocks.setImmediate.mock.calls[0][0]
+  ).toThrowErrorMatchingInlineSnapshot(`"Foo"`);
+
+  resolver('rejection', Error('Bar'));
+  expect(mocks.setImmediate).toHaveBeenCalledTimes(2);
+  expect(
+    mocks.setImmediate.mock.calls[1][0]
+  ).toThrowErrorMatchingInlineSnapshot(`"Bar"`);
 });
 
 test(`does nothing on bad type`, () => {
