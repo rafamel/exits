@@ -29,13 +29,23 @@ function prefix(level: TLogger): string {
   return (color ? color(`[${name}]`) : `[${name}]`) + ` ${APP_NAME}: `;
 }
 
-const factory = logger.methodFactory;
-logger.methodFactory = (...args) => (...inner: any[]) => {
-  factory.call(loglevel, ...args)(
-    prefix(args[0].toLowerCase() as TLogger) + inner[0],
-    ...inner.slice(1)
-  );
-};
+type Factory = loglevel.MethodFactory & { registered?: boolean };
+const factory: Factory = logger.methodFactory;
+
+// Prevent method factory to register twice for the same logger
+// as it could occur with different instances
+if (!factory.registered) {
+  const methodFactory: Factory = function(...args) {
+    return (...inner: any[]) => {
+      factory.call(loglevel, ...args)(
+        prefix(args[0].toLowerCase() as TLogger) + inner[0],
+        ...inner.slice(1)
+      );
+    };
+  };
+  methodFactory.registered = true;
+  logger.methodFactory = methodFactory;
+}
 
 // Must be set -at least once- after overwriting methodFactory
 logger.setDefaultLevel(DEFAULT_LOG_LEVEL);
