@@ -1,3 +1,13 @@
+## [1.0.1](https://github.com/rafamel/exits/compare/v1.0.0...v1.0.1) (2019-05-17)
+
+
+### Bug Fixes
+
+* **deps:** updates dependencies ([e85bdd2](https://github.com/rafamel/exits/commit/e85bdd2))
+* **package:** declares exits bin ([fe412d5](https://github.com/rafamel/exits/commit/fe412d5))
+
+
+
 # [1.0.0](https://github.com/rafamel/exits/compare/v0.5.1...v1.0.0) (2019-05-15)
 
 
