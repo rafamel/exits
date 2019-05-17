@@ -15,6 +15,9 @@
     "cli",
     "node"
   ],
+  "bin": {
+    "exits": "dist-node/bin/exits.js"
+  },
   "engines": {
     "node": ">=8"
   },
