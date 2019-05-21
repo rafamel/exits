@@ -33,21 +33,24 @@ If global CLI usage is intended, you can install globally by running: `npm insta
 Run a command after a main command terminates.
 
 Usage:
-  $ exits [options] [mainCmd] [lastCmd]
+  $ exits [options] [firstCmd] [lastCmd]
 
 Options:
   --stdio <value>     stdio options to spawn children processes with.
       Can be inherit, pipe, ignore, or a comma separated combination for stdin,stdout,stderr.
       Default: inherit.
       Example: --stdio pipe,inherit,inherit
-  --at <value>        Termination cases of the main process in which the last command will run.
-      Can be signal, error, success, or a comma separated combination of those.
+  --at <value>        Termination cases of the first process in which the last command will run.
+      Can be one of signal, error, success, or a comma separated combination of those.
       Default: signal,error,success.
       Example: --at signal,error
   --log <level>       Logging level, one of trace, debug, info, warn, error, or silent.
       Default: info.
       Example: --log info
-  --fail              Exits with code 1 if the last command fails.
+  --fail <value>      Exits with code 1 if command execution fails.
+      Can be one of first, last, both, or none.
+      Default: both.
+      Example: --fail both
   -h, --help          Show help
   -v, --version       Show version number
 
