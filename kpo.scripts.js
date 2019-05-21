@@ -1,15 +1,13 @@
 // prettier-ignore
-const { series, parallel, ensure, line, json, log, confirm, rm, remove, kpo, silent } = require('kpo');
+const { series, parallel, ensure, line, json, log, confirm, rm, remove, kpo, silent, copy, glob } = require('kpo');
 const path = require('path');
 const bump = require('conventional-recommended-bump');
 const { promisify } = require('util');
-const { merge } = require('slimconf');
 const project = require('./project.config');
 
 // prettier-ignore
-verify('nodeOnly', 'typescript', 'ext.js', 'ext.ts', 'paths.docs', 'release.build', 'release.docs');
+verify('esnext', 'typescript', 'ext.js', 'ext.ts', 'paths.docs', 'release.build', 'release.docs');
 const vars = {
-  node: !!project.nodeOnly,
   semantic: !!process.env.SEMANTIC,
   commit: !!process.env.COMMITIZEN || !!process.env.SEMANTIC,
   ext: extensions(),
@@ -19,24 +17,33 @@ const vars = {
 module.exports.scripts = {
   start: kpo`watch`,
   build: {
-    default: kpo`validate build.force`,
-    force: series.env('kpo build.pack build.types', { NODE_ENV: 'production' }),
-    $pack: [ensure`./pkg`, 'pack build'].concat(
-      vars.node && [
-        line`babel src --out-dir ./pkg/dist-node
-        --extensions ${vars.dotExt} --source-maps inline`,
-        json('./pkg/package.json', (pkg) => {
-          if (pkg.main || pkg.module || pkg.esnext) throw Error(`!node pack`);
-          return merge(pkg, { main: 'dist-node/index.js' });
-        })
-      ]
+    default: [
+      kpo`validate`,
+      series.env('kpo build.pack', { NODE_ENV: 'production' })
+    ],
+    pack: kpo`build.prepare build.node build.esnext build.types`,
+    $prepare: [
+      [rm`pkg`, ensure`pkg`],
+      copy(['README.md', 'LICENSE', 'CHANGELOG.md'], { to: 'pkg' }),
+      json('./package.json', './pkg/package.json', ({ json }) => ({
+        ...json,
+        scripts: undefined,
+        files: ['dist-*/'],
+        main: 'dist-node/index.js',
+        esnext: project.esnext ? 'dist-src/index.js' : undefined,
+        types: project.typescript ? 'dist-types/index.d.ts' : undefined
+      }))
+    ],
+    $node: series(
+      'babel ./src --out-dir ./pkg/dist-node --source-maps inline',
+      { args: ['--extensions', vars.dotExt] }
     ),
+    $esnext: project.esnext && [
+      series.env('standard-pkg --src src/ --dist pkg/dist-src', { ESNEXT: '#' })
+    ],
     $types: project.typescript && [
       `ttsc --project ttsconfig.json --outDir ./pkg/dist-types/`,
-      json('./pkg/package.json', (pkg) => {
-        return merge(pkg, { types: 'dist-types/index.d.ts' });
-      }),
-      log`Declaration files built`
+      copy(glob`./src/**/*.d.ts`, { from: 'src', to: 'pkg/dist-types' })
     ]
   },
   commit: series.env('git-cz', { COMMITIZEN: '#' }),
@@ -61,7 +68,7 @@ module.exports.scripts = {
     default: 'onchange ./src --initial --kill -- kpo watch.task',
     $task: [
       log`\x1Bc⚡`,
-      parallel(['kpo build.pack build.types', 'kpo lint'], {
+      parallel(['kpo build.pack', 'kpo lint'], {
         names: ['build', 'eslint'],
         colors: ['blue', 'yellow']
       })
@@ -113,8 +120,8 @@ module.exports.scripts = {
   version: [
     kpo`preversion`,
     kpo`changelog`,
-    project.release.docs && kpo`docs`,
     project.release.build && kpo`build`,
+    project.release.docs && kpo`docs`,
     'git add .'
   ]
 };
@@ -125,7 +132,7 @@ function verify(...arr) {
 
 function extensions() {
   return (project.typescript ? project.ext.ts.split(',') : [])
-    .concat(project.ext.js)
+    .concat(project.ext.js.split(','))
     .filter(Boolean)
     .join(',');
 }

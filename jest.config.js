@@ -11,6 +11,7 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: [`<rootDir>/src/**/*.{${EXT}}`],
   modulePathIgnorePatterns: [
+    '.*\\.d\\.ts$',
     '<rootDir>/pkg',
     '<rootDir>/src/@types',
     '<rootDir>/src/.*/__mocks__',

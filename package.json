@@ -15,18 +15,16 @@
     "cli",
     "node"
   ],
-  "bin": {
-    "exits": "dist-node/bin/exits.js"
-  },
   "engines": {
     "node": ">=8"
   },
+  "esnext": "pkg/dist-src/index.js",
   "main": "pkg/dist-node/index.js",
   "types": "pkg/dist-types/index.d.ts",
   "scripts": {
     "start": "kpo start --",
     "build": "kpo build --",
-    "build.force": "kpo build.force --",
+    "build.pack": "kpo build.pack --",
     "commit": "kpo commit --",
     "semantic": "kpo semantic --",
     "release": "kpo release --",
@@ -70,7 +68,6 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-typescript": "^7.3.3",
-    "@pika/pack": "^0.3.7",
     "@types/common-tags": "^1.8.0",
     "@types/jest": "^24.0.13",
     "@types/lodash.clonedeep": "^4.5.4",
@@ -107,9 +104,10 @@
     "onchange": "^6.0.0",
     "prettier": "^1.17.1",
     "slimconf": "^0.9.1",
+    "standard-pkg": "^0.4.1",
     "ttypescript": "^1.5.6",
     "typedoc": "^0.14.2",
-    "typescript": "^3.4.5"
+    "typescript": "3.4.5"
   },
   "dependencies": {
     "arg": "^4.1.0",
@@ -133,8 +131,5 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
-  },
-  "@pika/pack": {
-    "pipeline": []
   }
 }

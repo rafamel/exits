@@ -28,7 +28,6 @@ If global CLI usage is intended, you can install globally by running: `npm insta
 
 ## CLI
 
-<!-- markdownlint-disable MD040 MD031 -->
 ```
 Run a command after a main command terminates.
 
@@ -57,7 +56,6 @@ Options:
 Examples:
   $ exits "echo foo" "echo bar"
 ```
-<!-- markdownlint-enable MD040 MD031 -->
 
 ## Programatic Usage
 
