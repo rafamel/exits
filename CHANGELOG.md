@@ -1,3 +1,18 @@
+# [2.0.0](https://github.com/rafamel/exits/compare/v1.0.2...v2.0.0) (2019-05-21)
+
+
+### Features
+
+* **bin:** fail flag can take different configuration values for failure ([365b6d4](https://github.com/rafamel/exits/commit/365b6d4))
+
+
+### BREAKING CHANGES
+
+* **bin:** For the executable, the --fail flag -previously boolean- now takes several possible
+values for failure
+
+
+
 ## [1.0.2](https://github.com/rafamel/exits/compare/v1.0.1...v1.0.2) (2019-05-17)
 
 
