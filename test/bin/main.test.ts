@@ -331,54 +331,140 @@ describe(`spawn`, () => {
       'pipe'
     ]);
   });
-  test(`exits w/ code 0 when not --fail`, async () => {
-    const args = 'foo bar'.split(' ');
-    await expect(main(args)).resolves.toBeUndefined();
+  test(`--fail both fails`, async () => {
+    for (let args of ['foo bar', '--fail both foo bar']) {
+      Object.values(mocks).forEach((mock) => mock.mockClear());
+
+      mocks.spawn.mockImplementationOnce(() => ({
+        promise: Promise.reject(Error())
+      }));
+      await expect(main(args.split(' '))).resolves.toBeUndefined();
+
+      mocks.options.mockClear();
+      await mocks.add.mock.calls[0][1](null, null, {});
+
+      const fn = mocks.add.mock.calls[1][1];
+      await fn(null, null, { run: false });
+      expect(mocks.options).toHaveBeenCalledTimes(1);
+      expect(mocks.options.mock.calls[0][0]).toHaveProperty('resolver');
+      await mocks.options.mock.calls[0][0].resolver();
+      expect(mocks.resolver).toHaveBeenCalledTimes(1);
+      expect(mocks.resolver).toHaveBeenCalledWith('exit', 1);
+
+      Object.values(mocks).forEach((mock) => mock.mockClear());
+      mocks.spawn.mockImplementationOnce(() => ({
+        promise: Promise.reject(Error())
+      }));
+      await fn(null, null, { run: true });
+      expect(mocks.options).toHaveBeenCalledTimes(1);
+      expect(mocks.options.mock.calls[0][0]).toHaveProperty('resolver');
+      await mocks.options.mock.calls[0][0].resolver();
+      expect(mocks.resolver).toHaveBeenCalledTimes(1);
+      expect(mocks.resolver).toHaveBeenCalledWith('exit', 1);
+    }
+  });
+  test(`--fail both succeeds`, async () => {
+    await expect(main('foo bar'.split(' '))).resolves.toBeUndefined();
 
     mocks.options.mockClear();
+    await mocks.add.mock.calls[0][1](null, null, {});
+
     const fn = mocks.add.mock.calls[1][1];
-    await fn(null, null, { run: false });
-    expect(mocks.options).not.toHaveBeenCalled();
     await fn(null, null, { run: true });
+
     expect(mocks.options).not.toHaveBeenCalled();
+    expect(mocks.resolver).not.toHaveBeenCalled();
+  });
+  test(`--fail first fails`, async () => {
     mocks.spawn.mockImplementationOnce(() => ({
       promise: Promise.reject(Error())
     }));
+    await expect(
+      main('--fail first foo bar'.split(' '))
+    ).resolves.toBeUndefined();
+
+    mocks.options.mockClear();
+    await mocks.add.mock.calls[0][1](null, null, {});
+
+    const fn = mocks.add.mock.calls[1][1];
+    await fn(null, null, { run: false });
+    expect(mocks.options).toHaveBeenCalledTimes(1);
+    expect(mocks.options.mock.calls[0][0]).toHaveProperty('resolver');
+    await mocks.options.mock.calls[0][0].resolver();
+    expect(mocks.resolver).toHaveBeenCalledTimes(1);
+    expect(mocks.resolver).toHaveBeenCalledWith('exit', 1);
+  });
+  test(`--fail first succeeds`, async () => {
+    await expect(
+      main('--fail first foo bar'.split(' '))
+    ).resolves.toBeUndefined();
+
+    mocks.options.mockClear();
+    await mocks.add.mock.calls[0][1](null, null, {});
+
+    mocks.spawn.mockImplementationOnce(() => ({
+      promise: Promise.reject(Error())
+    }));
+    const fn = mocks.add.mock.calls[1][1];
     await fn(null, null, { run: true });
     expect(mocks.options).not.toHaveBeenCalled();
     expect(mocks.resolver).not.toHaveBeenCalled();
   });
-  test(`exits w/ code 0 when second command succeeds and --fail`, async () => {
-    const args = '--fail foo bar'.split(' ');
-    await expect(main(args)).resolves.toBeUndefined();
+  test(`--fail last fails`, async () => {
+    await expect(
+      main('--fail last foo bar'.split(' '))
+    ).resolves.toBeUndefined();
 
-    mocks.options.mockClear();
-    const fn = mocks.add.mock.calls[1][1];
-    await fn(null, null, { run: false });
-    expect(mocks.options).not.toHaveBeenCalled();
-    await fn(null, null, { run: true });
-    expect(mocks.options).not.toHaveBeenCalled();
-    expect(mocks.resolver).not.toHaveBeenCalled();
-  });
-  test(`exits w/ code 0 when second command fails and --fail`, async () => {
-    const args = '--fail foo bar'.split(' ');
-    await expect(main(args)).resolves.toBeUndefined();
-
-    mocks.options.mockClear();
     mocks.spawn.mockImplementationOnce(() => ({
       promise: Promise.reject(Error())
     }));
+    mocks.options.mockClear();
+    await mocks.add.mock.calls[0][1](null, null, {});
+
     const fn = mocks.add.mock.calls[1][1];
     await fn(null, null, { run: true });
     expect(mocks.options).toHaveBeenCalledTimes(1);
     expect(mocks.options.mock.calls[0][0]).toHaveProperty('resolver');
-
-    const { resolver } = mocks.options.mock.calls[0][0];
-    expect(typeof resolver).toBe('function');
-    expect(mocks.resolver).not.toHaveBeenCalled();
-
-    resolver();
+    await mocks.options.mock.calls[0][0].resolver();
     expect(mocks.resolver).toHaveBeenCalledTimes(1);
     expect(mocks.resolver).toHaveBeenCalledWith('exit', 1);
+  });
+  test(`--fail last succeeds`, async () => {
+    mocks.spawn.mockImplementationOnce(() => ({
+      promise: Promise.reject(Error())
+    }));
+    await expect(
+      main('--fail last foo bar'.split(' '))
+    ).resolves.toBeUndefined();
+
+    mocks.options.mockClear();
+    await mocks.add.mock.calls[0][1](null, null, {});
+
+    const fn = mocks.add.mock.calls[1][1];
+    await fn(null, null, { run: true });
+    expect(mocks.options).not.toHaveBeenCalled();
+    expect(mocks.resolver).not.toHaveBeenCalled();
+  });
+  test(`--fail none succeeds`, async () => {
+    const args = '--fail none foo bar'.split(' ');
+    mocks.spawn.mockImplementationOnce(() => ({
+      promise: Promise.reject(Error())
+    }));
+    await expect(main(args)).resolves.toBeUndefined();
+
+    mocks.options.mockClear();
+    await mocks.add.mock.calls[0][1](null, null, {});
+
+    const fn = mocks.add.mock.calls[1][1];
+    await fn(null, null, { run: false });
+    expect(mocks.options).not.toHaveBeenCalled();
+    await fn(null, null, { run: true });
+    expect(mocks.options).not.toHaveBeenCalled();
+    mocks.spawn.mockImplementationOnce(() => ({
+      promise: Promise.reject(Error())
+    }));
+    await fn(null, null, { run: true });
+    expect(mocks.options).not.toHaveBeenCalled();
+    expect(mocks.resolver).not.toHaveBeenCalled();
   });
 });
