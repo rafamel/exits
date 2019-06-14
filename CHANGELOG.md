@@ -1,3 +1,12 @@
+## [2.0.1](https://github.com/rafamel/exits/compare/v2.0.0...v2.0.1) (2019-06-14)
+
+
+### Bug Fixes
+
+* **package:** declares bin ([b36a24d](https://github.com/rafamel/exits/commit/b36a24d))
+
+
+
 # [2.0.0](https://github.com/rafamel/exits/compare/v1.0.2...v2.0.0) (2019-05-21)
 
 
