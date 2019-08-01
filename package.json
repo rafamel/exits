@@ -102,14 +102,14 @@
     "eslint-restricted-globals": "^0.2.0",
     "husky": "^2.3.0",
     "jest-cli": "^24.8.0",
-    "kpo": "^0.9.0",
-    "markdownlint-cli": "^0.16.0",
+    "kpo": "^0.11.0",
+    "markdownlint-cli": "^0.17.0",
     "onchange": "^6.0.0",
     "prettier": "^1.17.1",
-    "slimconf": "^0.9.1",
+    "slimconf": "^0.10.0",
     "standard-pkg": "^0.4.1",
     "ttypescript": "^1.5.6",
-    "typedoc": "^0.14.2",
+    "typedoc": "^0.15.0",
     "typescript": "3.4.5"
   },
   "dependencies": {
