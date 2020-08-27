@@ -120,7 +120,7 @@
     "errorish": "^0.4.0",
     "lodash.clonedeep": "^4.5.0",
     "loglevel": "^1.6.1",
-    "npm-run-path": "^3.1.0",
+    "npm-run-path": "^4.0.0",
     "pify": "^4.0.1",
     "promist": "^0.7.0",
     "uuid": "^3.3.2"
