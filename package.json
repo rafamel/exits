@@ -122,7 +122,7 @@
     "loglevel": "^1.6.1",
     "npm-run-path": "^3.1.0",
     "pify": "^4.0.1",
-    "promist": "^0.7.0",
+    "promist": "^4.0.0",
     "uuid": "^3.3.2"
   },
   "husky": {
